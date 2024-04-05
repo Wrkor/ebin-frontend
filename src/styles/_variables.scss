@@ -1,0 +1,63 @@
+//Texts
+$font-family-sans-serif: 'Segoe UI';
+
+//Colors
+$black-Color: rgba(33, 37, 41, 1);
+$black-90-Color: rgba(33, 37, 41, 0.9);
+$black-80-Color: rgba(33, 37, 41, 0.8);
+$black-70-Color: rgba(33, 37, 41, 0.7);
+$active-Color: rgba(253, 147, 48, 1);
+$bg-page-Color: rgb(255, 255, 255);
+
+//Border
+$block-Border: 2px solid rgba(33, 37, 41, 0.08);
+$table-Border: 1px solid rgba(33, 37, 41, 0.2);
+$btn-Border: 1px solid ;
+$active-Border: 2px solid ;
+
+//Effects
+$scale-Transform: scale(1.01);
+$btn-Transform: scale(1.01);
+$time-Animation: 300ms;
+$type-Animation: ease;
+$shadow-Filter: drop-shadow(0px 2px 4px rgba(33, 37, 41, 0.5));
+
+//MediaQueries
+$xxl: 1400px;
+$xl: 1200px;
+$lg: 992px;
+$md: 768px;
+$sm: 576px;
+
+$height-m: 800px;
+$height-s: 700px;
+
+@mixin mq-xxl {
+    @media (min-width: $xxl){
+        @content;
+    }
+}
+
+@mixin mq-xl {
+    @media (min-width: $xl){
+        @content;
+    }
+}
+
+@mixin mq-lg {
+    @media (min-width: $lg){
+        @content;
+    }
+}
+
+@mixin mq-md {
+    @media (min-width: $md){
+        @content;
+    }
+}
+
+@mixin mq-sm {
+    @media (min-width: $sm){
+        @content;
+    }
+}

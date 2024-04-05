@@ -1,0 +1,36 @@
+@import "../../styles/_mixins.scss";
+
+div.canvas {
+    width: 300px !important;
+
+    h4.logo {
+        cursor: pointer;
+        color: var(--app-black);
+        font-weight: 500;
+        font-size: 24px;
+    }
+    div.container {
+    
+        a.link {
+    
+            svg path {
+                stroke: var(--app-black);
+            }
+    
+            h5 {
+                color: var(--app-black);
+                font-weight: 400;
+                font-size: 20px;
+            }
+            &:hover, &.active {
+
+                svg path {
+                    stroke: $active-Color;
+                }
+                h5 {
+                    color: $active-Color;
+                }
+            }
+        }
+    }
+}

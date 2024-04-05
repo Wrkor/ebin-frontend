@@ -1,0 +1,29 @@
+@import "../../../styles/_mixins.scss";
+
+footer {
+
+    div.fit {
+        margin-top: 30px;
+        height: 82px;
+    }
+    div.container {
+        width: 100%;
+        padding: 16px 50px;
+        background-color: var(--bs-body-bg);
+        border-top: solid 2px var(--app-border-block);
+    }
+    h6 {
+        @include text-400-16-xs;
+        color: var(--app-black-70) !important;
+        padding-right: 40px;
+        transition: color $type-Animation $time-Animation;
+        cursor: pointer;
+        @include mq-sm {
+            @include text-400-16; 
+        }
+
+        &:hover {
+            color: $active-Color !important;
+        }
+    }
+}

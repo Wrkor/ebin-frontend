@@ -1,0 +1,16 @@
+@import "../../../styles/_mixins.scss";
+
+.title {
+    color: var(--app-black);
+    @include mq-sm {
+        font-size: 32px;
+    }
+}
+
+.subtitle {
+    color: var(--app-black-90);
+    font-weight: 300;
+    @include mq-sm {
+        font-size: 20px;
+    }
+}

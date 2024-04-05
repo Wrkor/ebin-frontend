@@ -1,0 +1,29 @@
+@import "_mixins.scss";
+
+div.form-auth {
+    margin-top: 200px;
+
+    h1 {
+        margin-bottom: 20px;
+        color: var(--app-black);
+        font-weight: 500;
+        transition: color $time-Animation $type-Animation;
+        font-size: 32px;
+
+        @include mq-sm {
+            font-size: 40px;
+        }
+    }
+    h6 {
+        margin-bottom: 90px;
+        @include text-300-20-xs;
+        transition: color $time-Animation $type-Animation;
+
+        @include mq-sm {
+            @include text-300-20;
+        }
+    }
+    button {
+        margin-top: 40px;
+    }
+}

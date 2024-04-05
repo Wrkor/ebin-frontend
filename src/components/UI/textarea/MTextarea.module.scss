@@ -1,0 +1,14 @@
+@import "../../../styles/_mixins.scss";
+
+textarea.input {
+    height: 300px;
+    padding: 14px 20px;
+    @include text-300-20;
+    color: var(--app-black);
+    line-height: 150%;
+    border-radius: 8px;
+    border-color: transparent;
+    filter: var(--app-filter);
+    background-color: var(--app-input-color);
+    resize: both;
+}

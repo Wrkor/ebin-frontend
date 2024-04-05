@@ -1,0 +1,66 @@
+@import "../../../styles/_mixins.scss";
+
+tr.app {
+    cursor: pointer;
+    transition: transform $time-Animation $type-Animation;
+    
+    th {
+        padding: 15px 8px !important;
+        vertical-align: middle;
+
+        div {
+            height: 100%;
+
+            h6 {
+                text-align: center;
+                @include text-400-16-xs;
+                @include mq-sm {
+                    @include text-400-16;
+                }
+            }
+        }
+        &:first-child > div > div{
+                
+            &:nth-child(1) > img {
+                width: 60px;
+                height: 60px;
+            }
+            &:nth-child(2) > h6 {
+                text-align: left;
+                &:nth-child(1) {
+                    @include text-400-16;
+                }
+                &:nth-child(2) {
+                    @include text-300-16;
+                    color: $active-Color;
+                }
+            }
+        }
+        &:last-child div{
+            width: 100px;
+
+            @include mq-xl {
+                width: 150px;
+            }
+            svg {
+                cursor: pointer;
+    
+                path {
+                    stroke: var(--app-black);
+                    transition: stroke $time-Animation $type-Animation;
+                }
+                &:hover {
+                    path {
+                        stroke: $active-Color;
+                    }
+                }
+                &:last-child path {
+                    stroke: $active-Color;
+                }
+            }
+        }
+    }
+    &:hover {
+        transform: $scale-Transform;
+    }
+}

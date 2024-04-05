@@ -1,3 +1,22 @@
-.MBtn {
-    cursor: pointer;
+@import "../../../styles/_mixins.scss";
+
+.button {
+    border: $active-Border $active-Color;
+    background-color: transparent;
+    border-radius: 30px;
+    height: 48px;
+    @include text-400-20-xs;
+    color: var(--app-black-90);
+    transition: transform $time-Animation $type-Animation;
+    @include mq-sm {
+        @include text-400-20;
+    }
+
+    &:hover {
+        transform: $btn-Transform;
+    }
+    &.active {
+        background-color: $active-Color;
+        color: white;
+    }
 }

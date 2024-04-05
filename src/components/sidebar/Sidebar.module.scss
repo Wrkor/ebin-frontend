@@ -1,0 +1,33 @@
+@import "../../styles/_variables.scss";
+
+div.container {
+    position: relative;
+
+    div.sidebar {
+        width: 250px;
+    
+        a.link {
+    
+            svg path {
+                stroke: var(--app-black);
+                transition: stroke $time-Animation $type-Animation;
+            }
+    
+            h5 {
+                color: var(--app-black);
+                font-weight: 400;
+                font-size: 20px;
+                transition: color $time-Animation $type-Animation;
+            }
+            &:hover, &.active {
+    
+                svg path {
+                    stroke: $active-Color;
+                }
+                h5 {
+                    color: $active-Color;
+                }
+            }
+        }
+    }
+}

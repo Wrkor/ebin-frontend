@@ -1,12 +1,9 @@
 import React from 'react';
 import classes from './MButton.module.scss';
-import Button from 'react-bootstrap/Button';
 
-const MButton = ({children, ...props}) => {
+const MButton = ({...props}) => {
     return (
-        <Button variant="primary" {...props} className={classes.MBtn}>
-            {children}
-        </Button>
+        <button {...props} className={`${classes.button} ${props.active ? classes.active : ''} ${props.className ?? ''}`}>{props.name}</button>
     );
 };
 

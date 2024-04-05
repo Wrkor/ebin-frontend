@@ -1,0 +1,32 @@
+@import "../../../styles/_mixins.scss";
+
+th {
+    padding-bottom: 15px !important;
+
+    div.col {
+        cursor: pointer;
+
+        h6 {
+            transition: color $time-Animation $type-Animation;
+            @include text-300-16-xs;
+            @include mq-sm {
+                @include text-300-16;
+            }
+        }
+        svg path{
+            transition: stroke $time-Animation $type-Animation;
+            stroke: var(--app-black-90);
+            stroke-width: 1px;
+        }
+
+        &:hover {
+
+            h6 {
+                color: $active-Color;
+            }
+            svg path {
+                stroke: $active-Color;
+            }
+        }
+    }
+}

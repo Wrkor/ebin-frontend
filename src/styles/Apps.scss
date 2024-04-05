@@ -1,0 +1,6 @@
+@import "_mixins.scss";
+
+div.withoutApp h5{
+    @include text-400-16;
+    color: var(--app-black-90);
+}

@@ -1,0 +1,42 @@
+@import "../../../styles/_variables.scss";
+
+button.nav-link {
+    width: fit-content;
+    margin-right: 60px;
+    padding: 0px !important;
+    position: relative;
+
+    h5 {
+        font-weight: 400;
+        color: var(--app-black-80);
+        font-size: 18px;
+        transition: color $time-Animation $type-Animation;
+    }
+    > div {
+        width: 100%;
+        height: 100%;
+        margin-top: 1px;
+        position: absolute;
+        bottom: -1px;
+        
+        svg {
+            opacity: 0;
+            width: 100%;
+            transition: opacity $time-Animation $type-Animation;
+        }
+    }
+    &.active, &:hover {
+        background-color: transparent !important;
+        border-color: transparent !important;
+
+        h5 {
+            color: $active-Color !important;
+        }
+        svg {
+            opacity: 1;
+        }
+    }
+    &:last-child {
+        margin-right: 0px;
+    }
+}

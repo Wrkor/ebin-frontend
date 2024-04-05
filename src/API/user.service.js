@@ -1,4 +1,4 @@
-import { AxiosPost } from "./";
+import { AxiosGet, AxiosPost, AxiosDelete } from "./";
 import constantsState from "../store/globalConstants";
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {login, authLoadingStop, phone, logout} from '../store/userReducer'
@@ -7,11 +7,9 @@ import {login, authLoadingStop, phone, logout} from '../store/userReducer'
 /* eslint-disable */
 const user = {
     id: 124, 
-    fullname: {
-        first: 'Александр', 
-        last: 'Потапов', 
-        father: 'Михайлович'
-    },
+    name: 'Александр', 
+    lastname: 'Потапов', 
+    middlename: 'Михайлович',
     status: 'Инженер контрольно-измерительных приборов',
     company_id: 153,
     phone: '77777777777',
@@ -21,18 +19,18 @@ const ms = 500;
 export const postAuth = createAsyncThunk(
     'user/postAuth',
     async function(_, {rejectWithValue, dispatch}) {
-        setTimeout(() => {
-            dispatch(login({user}));
-            dispatch(authLoadingStop());
-        }, ms);
-        return;
+        // setTimeout(() => {
+        //     dispatch(login({object: user}));
+        //     dispatch(authLoadingStop());
+        // }, ms);
+        // return;
 
-        AxiosPost(constantsState.endPoints.auth)
+        AxiosGet(constantsState.endPoints.auth)
         .then((response) => {
             if (response.status === 200) {
-                dispatch(authLoadingStop());
-                dispatch(login(JSON.parse(response.data)));
+                dispatch(login(response.data));
             }
+            dispatch(authLoadingStop());
         })
     }
 )
@@ -40,10 +38,10 @@ export const postAuth = createAsyncThunk(
 export const postPhone = createAsyncThunk(
     'user/postPhone',
     async function(number, {rejectWithValue, dispatch}) {
-        setTimeout(() => {
-            dispatch(phone());
-        }, ms);
-        return;
+        // setTimeout(() => {
+        //     dispatch(phone());
+        // }, ms);
+        // return;
 
         AxiosPost(constantsState.endPoints.phone, number)
         .then((response) => {
@@ -56,16 +54,16 @@ export const postPhone = createAsyncThunk(
 
 export const postLogin = createAsyncThunk(
     'user/postLogin',
-    async function({number, code}, {rejectWithValue, dispatch}) {
-        setTimeout(() => {
-            dispatch(login({user}));
-        }, ms);
-        return;
+    async function(userData, {rejectWithValue, dispatch}) {
+        // setTimeout(() => {
+        //     dispatch(postAuth());
+        // }, ms);
+        // return;
 
-        AxiosPost(constantsState.endPoints.phone, {number, code})
+        AxiosPost(constantsState.endPoints.login, userData)
         .then((response) => {
             if (response.status === 200) {
-                dispatch(login(JSON.parse(response.data)));
+                dispatch(postAuth());
             }
         })
     }
@@ -74,12 +72,12 @@ export const postLogin = createAsyncThunk(
 export const postLogout = createAsyncThunk(
     'user/postLogout',
     async function(_, {rejectWithValue, dispatch}) {
-        setTimeout(() => {
-            dispatch(logout());
-        }, ms);
-        return;
+        // setTimeout(() => {
+        //     dispatch(logout());
+        // }, ms);
+        // return;
 
-        AxiosPost(constantsState.endPoints.logout)
+        AxiosDelete(constantsState.endPoints.logout)
         .then((response) => {
             if (response.status === 200) {
                 dispatch(logout());

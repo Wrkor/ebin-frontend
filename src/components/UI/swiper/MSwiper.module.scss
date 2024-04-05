@@ -1,0 +1,24 @@
+@import "../../../styles/_mixins.scss";
+
+.swiper {
+    border: none;
+    width: 100%;
+    height: 100%;
+  
+    .swiperSlide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    
+        img {
+            display: block;
+            object-fit: cover;
+            width: 150px;
+            height: 300px;
+        }
+    }
+}

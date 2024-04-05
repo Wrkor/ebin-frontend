@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { Title, TableHeaderApp, TableBodyApp } from '../components/UI';
 import { getApps } from '../API/app.service';
-import MButton from '../components/UI/button/MButton';
+import '../styles/Apps.scss';
 
 const Apps = () => {
   const dispatch = useDispatch();
@@ -9,13 +10,31 @@ const Apps = () => {
 
   useEffect(() => {
     dispatch(getApps());
-  }, [dispatch])
+  }, [dispatch]);
   
   return (
     <div>
-      <h1>Apps {apps ? apps.length : 0}</h1>
-      <MButton>Hey!</MButton>
-      </div>
+      <Title title="Приложения" subtitle="Список всех опубликованных приложений"/>
+      <table className="table">
+        <thead>
+          <TableHeaderApp />
+        </thead>
+        <tbody>
+          {
+            apps?.length > 0 &&
+            apps.map(app => (
+              <TableBodyApp key={app.id} app={app}/>
+            ))
+          }
+        </tbody>
+      </table>
+      {
+        apps?.length === 0 && 
+        <div className='withoutApp w-100 d-flex justify-content-center mt-4'>
+          <h5>Приложений в маркете нет</h5>
+        </div>
+      }
+    </div>
   )
 }
 

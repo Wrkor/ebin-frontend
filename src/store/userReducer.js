@@ -6,21 +6,21 @@ const userReducer = createSlice({
     initialState: {
         isAuthLoading: true,
         isAuth: false,
-        isPhone: false,
-        user: [],
+        isEnterPhone: false,
+        user: {},
     },
     reducers: {
         phone(state) {
-            state.isPhone = true;
+            state.isEnterPhone = true;
         },
         login(state, action) {
             state.isAuth = true;
-            state.isPhone = true;
-            state.user = action.payload.user;
+            state.isEnterPhone = true;
+            state.user = action.payload.object;
         },
         logout(state) {
             state.isAuth = false;
-            state.isPhone = false;
+            state.isEnterPhone = false;
             state.user = [];
         },
         authLoadingStop(state) {

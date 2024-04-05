@@ -1,0 +1,24 @@
+@import "../../../styles/_mixins.scss";
+
+div.update {
+    
+    h5.version {
+        margin-bottom: 10px;
+        @include text-400-20-xs;
+        @include mq-sm { @include text-400-20; }
+        color: var(--app-black-90) !important;
+
+    }
+    h6.date {
+        margin-bottom: 20px;
+        @include text-200-14;
+
+    }
+    h6.description {
+        @include text-300-16-xs;
+        @include mq-sm { @include text-300-16; }
+        color: var(--app-black) !important;
+        line-height: 150% !important;
+    }
+
+}

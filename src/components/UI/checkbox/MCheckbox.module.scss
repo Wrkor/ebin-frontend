@@ -1,0 +1,39 @@
+@import "../../../styles/_mixins.scss";
+
+div.check {
+    
+    input {
+        cursor: pointer;
+        height: 30px;
+        width: 30px;
+        opacity: 0;
+
+        &:checked {
+            display: none;
+        }
+    }
+    h6 {
+        cursor: pointer;
+        @include text-300-20;
+    }
+    label.check {
+        background: url("../../../assets/Checkbox.svg") no-repeat center;
+        align-self: flex-start;
+        height: 30px;
+        width: 30px;
+        cursor: pointer; 
+        transition: all $time-Animation $type-Animation;
+
+        &:has(input:checked) {
+            background: url("../../../assets/CheckboxTrue.svg") no-repeat center;
+        }
+        
+        &.black{
+            background: url("../../../assets/CheckboxBlack.svg") no-repeat center;
+
+            &:has(input:checked) {
+                background: url("../../../assets/CheckboxBlackTrue.svg") no-repeat center;
+            }
+        }
+    }
+}

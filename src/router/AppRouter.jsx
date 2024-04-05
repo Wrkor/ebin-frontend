@@ -1,7 +1,8 @@
 import React from 'react'
-import {Navigate, Route, Routes} from "react-router-dom";
-import {privateRoutes, publicRoutes, loadRoute} from "./";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { privateRoutes, publicRoutes, loadRoute } from "./index.jsx";
 import { useSelector } from 'react-redux';
+import Sidebar from "../components/sidebar/Sidebar.jsx"
 
 const AppRouter = () => {
     const isAuthLoading = useSelector(state => state.user.isAuthLoading);
@@ -9,40 +10,46 @@ const AppRouter = () => {
     const routes = useSelector(state => state.constants.routes);
 
     return (
-        !isAuthLoading ?
+        !isAuthLoading 
+        ?
             isAuth
-                ?
-                <Routes>
-                    {privateRoutes.map(route =>
+            ?
+            <>
+                <Sidebar>
+                    <Routes>
+                        {privateRoutes.map(route =>
+                            <Route
+                                element={route.element}
+                                path={route.path}
+                                exact={route.exact}
+                                key={route.path}
+                            />
+                        )}
                         <Route
-                            element={route.element}
-                            path={route.path}
-                            exact={route.exact}
-                            key={route.path}
+                            path={routes.login}
+                            element={<Navigate to={routes.apps} replace />}
                         />
-                    )}
-                    <Route
-                        path={routes.login}
-                        element={<Navigate to={routes.apps} replace />}
-                    />
-                    {publicRoutes.map(route =>
+                        {publicRoutes.map(route =>
+                            <Route
+                                element={route.element}
+                                path={route.path}
+                                exact={route.exact}
+                                key={route.path}
+                            />
+                        )}
                         <Route
-                            element={route.element}
-                            path={route.path}
-                            exact={route.exact}
-                            key={route.path}
+                            path={routes.main}
+                            element={<Navigate to={routes.apps} replace />}
                         />
-                    )}
-                    <Route
-                        path={routes.main}
-                        element={<Navigate to={routes.apps} replace />}
-                    />
-                    <Route
-                        path={routes.any}
-                        element={<Navigate to={routes.error404} replace />}
-                    />
-                </Routes>
-                :
+                        <Route
+                            path={routes.any}
+                            element={<Navigate to={routes.error404} replace />}
+                        />
+                    </Routes>
+                </Sidebar>
+            </>
+            :
+            <>
                 <Routes>
                     {publicRoutes.map(route =>
                         <Route
@@ -69,7 +76,9 @@ const AppRouter = () => {
                         element={<Navigate to={routes.error404} replace />}
                     />
                 </Routes>
-            : 
+            </>
+        : 
+        <>
             <Routes> 
                 <Route
                     element={loadRoute.element}
@@ -78,6 +87,7 @@ const AppRouter = () => {
                     key={loadRoute.path}
                 />
             </Routes>
+        </>
     );
 }
 

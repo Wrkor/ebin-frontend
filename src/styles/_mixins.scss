@@ -1,0 +1,85 @@
+@import "_variables.scss";
+
+@mixin text-400-32-xs {
+    color: var(--app-black);
+    font-weight: 400;
+    font-size: 24px;
+}
+
+@mixin text-400-32 {
+    @include text-400-32-xs;
+    font-size: 32px;
+}
+
+@mixin text-400-24-xs {
+    color: var(--app-black);
+    font-weight: 400;
+    font-size: 20px;
+}
+
+@mixin text-400-24 {
+    @include text-400-24-xs;
+    font-size: 24px;
+}
+
+@mixin text-400-20-xs {
+    color: var(--app-black);
+    font-weight: 400;
+    font-size: 16px;
+}
+
+@mixin text-400-20 {
+    @include text-400-20-xs;
+    font-size: 20px;
+}
+
+@mixin text-400-16-xs {
+    color: var(--app-black);
+    font-weight: 400;
+    font-size: 14px;
+}
+
+@mixin text-400-16 {
+    @include text-400-16-xs;
+    font-size: 16px;
+}
+
+@mixin text-300-20-xs {
+    color: var(--app-black-90);
+    font-weight: 300;
+    font-size: 16px;
+}
+
+@mixin text-300-20 {
+    @include text-300-16-xs;
+    font-size: 20px;
+}
+
+@mixin text-300-16-xs {
+    color: var(--app-black-90);
+    font-weight: 300;
+    font-size: 14px;
+}
+
+@mixin text-300-16 {
+    @include text-300-16-xs;
+    font-size: 16px;
+}
+
+@mixin text-200-14 {
+    color: var(--app-black-70);
+    font-weight: 300;
+    font-size: 14px;
+}
+
+@mixin text-300-14 {
+    color: var(--app-black-90);
+    font-weight: 300;
+    font-size: 14px;
+}
+
+@mixin text-400-14 {
+    color: var(--app-black);
+    font-weight: 400;
+    font-size: 14px;
+}

@@ -1,0 +1,56 @@
+@import "../../../styles/_mixins.scss";
+
+div.modal {
+
+    > div.dialog {
+        margin-top: 80px !important;
+        margin-right: 30px !important;
+       
+        width: 250px;
+
+        div.content {
+            background-color: var(--app-modal-bg);
+            border: none;
+            filter: var(--app-filter);
+
+            div.body div {
+        
+                &:first-child {
+        
+                    > h5 {
+                        line-height: 120% !important;
+                        @include text-300-20;
+                    }
+                    > div.profileSVG {
+                        width: 40px;
+        
+                        > svg {
+                            width: 30px;
+                            height: 30px;
+                
+                            path {
+                                stroke: var(--app-black-80);
+                                stroke-width: 1.5px;
+                            }
+                        }
+                    }
+                }
+                &:last-child {
+                    margin-left: 90px;
+        
+                    h5 {
+                        width: fit-content;
+                        cursor: pointer;
+        
+                        transition: color $time-Animation $type-Animation;
+                        @include text-400-16;
+        
+                        &:hover {
+                            color: $active-Color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
