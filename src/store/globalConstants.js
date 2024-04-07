@@ -24,7 +24,7 @@ const constantsState = {
         delete: '/api/apps',
         pushChecked: '/api/push',
     },
-    api: 'https://e933-178-184-94-89.ngrok-free.app',
+    api: 'http://77.222.60.86:8000',
     sizeWindow: {
         phone: 360,
         tablet: 960,
