@@ -1,32 +1,51 @@
-import React, { useState } from 'react'
-import AsyncSelect from 'react-select/async';
+import React, { forwardRef } from 'react'
+import { useController } from 'react-hook-form'
+import AsyncSelect from 'react-select/async'
 
-const MAsyncSelect = ({changeValue, request, ...props}) => {
-    const defaultOption = {
-        value: 'disabled', 
-        label: 'Выберите...', 
-        isDisabled: true, 
-    }
-    const [value, setValue] = useState(props.value?.label || defaultOption);
-    
-    const loadOptions = (inputValue) => new Promise((resolve) => {
-            request()
-                .then((options) => 
-                {
-                    resolve(options.objects?.filter((i) => 
-                        i.name.toLowerCase().includes(inputValue.toLowerCase())
-                    ).map(app => {return { name: app.id, label: app.name}}));
-                })
-        });
-    
-    const onChangeValue = (val) => { 
-        changeValue(val);
-        setValue(val);
-    };
+const MAsyncSelect = forwardRef(
+	({ control, name, request, options, onEdited, error, message, className, ...props }, _) => {
+		const { field } = useController({ name, control })
+		const loadOptions = input =>
+			new Promise((resolve, reject) => {
+				request().then(({ payload, meta }) => {
+					if (meta?.requestStatus === 'fulfilled') {
+						resolve(
+							payload.objects
+								?.filter(i => i.name.toLowerCase().includes(input.toLowerCase()))
+								.map(app => {
+									return { name: app.id, label: app.name }
+								})
+						)
+					} else reject()
+				})
+			})
+		return (
+			<>
+				<AsyncSelect
+					{...props}
+					ref={field.ref}
+					value={
+						Array.isArray(field?.value) ? !!field?.value[0]?.name && field.value : !!field?.value?.name && field.value
+					}
+					loadOptions={loadOptions}
+					onChange={option => {
+						field.onChange(option)
+						field.onBlur(option)
+						onEdited && onEdited(option)
+					}}
+					onBlur={field.onBlur}
+					defaultOptions
+					cacheOptions
+					classNamePrefix='react-select'
+					className={`react-select ${className ?? ''}`}
+					noOptionsMessage={() => 'Ничего не найдено'}
+					loadingMessage={() => 'Идет поиск...'}
+					placeholder='Выберите...'
+				/>
+				{error && <p className='error-msg'>{message}</p>}
+			</>
+		)
+	}
+)
 
-    return (
-        <AsyncSelect cacheOptions loadOptions={loadOptions} {...props} defaultValue={value} onChange={onChangeValue} classNamePrefix="react-select" className={`react-select ${props.className ?? ""}`}/>
-    );
-};
-
-export default MAsyncSelect;
+export default MAsyncSelect

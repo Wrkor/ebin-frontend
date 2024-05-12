@@ -1,0 +1,36 @@
+@import "../../../styles/_variables.scss";
+
+tr.app th {
+
+    &:first-child {
+        width: 80px;
+        @include mq-xl {
+            width: 200px;
+        }
+
+        div {
+            justify-content: flex-start !important;
+        }
+    }
+    &:nth-child(2) {
+        width: 300px;
+
+        @include mq-md {
+            width: 600px;
+        }
+        @include mq-xl {
+            width: 900px;
+        }
+        
+        div {
+            justify-content: flex-start !important;
+        }
+    }
+
+    &:nth-child(3) {
+        width: 80px;
+        @include mq-xl {
+            width: 200px;
+        }
+    }
+}

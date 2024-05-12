@@ -110,6 +110,8 @@ div.appCard {
           @include mq-sm {
             @include text-400-16;
           }
+          width: 1350px;
+          word-wrap: break-word;
           line-height: 150% !important;
           font-weight: 300 !important;
         }

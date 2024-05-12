@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
-import classes from './MTextarea.module.scss';
+import React, { forwardRef } from 'react'
+import classes from './MTextarea.module.scss'
 
-const MTextarea = ({changeValue, ...props}) => {
-    const [value, setValue] = useState(props.default ?? '');
+const MTextarea = forwardRef(({ onBlur, onEdited, error, message, className, ...props }, ref) => {
+	return (
+		<>
+			<textarea
+				{...props}
+				ref={ref}
+				onBlur={e => {
+					onBlur(e)
+					onEdited && onEdited(e.target.value)
+				}}
+				className={`${classes.input} ${className || ''}`}
+				type='text'
+			/>
+			{error && <p className='error-msg'>{message}</p>}
+		</>
+	)
+})
 
-    const onChangeValue = (value) => { 
-        setValue(value);
-        changeValue(value);
-    };
-    return (
-        <textarea value={value} onChange={e => onChangeValue(e.target.value)} {...props} className={`${classes.input} ${props.className ?? ""}`} type="text" placeholder={props.placeholder}/>
-    );
-};
-
-export default MTextarea;
+export default MTextarea

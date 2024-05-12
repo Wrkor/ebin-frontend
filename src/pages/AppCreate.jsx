@@ -1,160 +1,364 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { MInput , MCheckbox, MTextarea, MSelect, MForm, MFilepond, TabContent, TabOption, Title, MButton, MFooter } from "../components/UI/";
-import { postAppCreate } from '../API/app.service';
-import { setAppCreate } from '../store/appReducer'
-import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
-import '../styles/AppCreate.scss';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Tab } from 'bootstrap/dist/js/bootstrap.bundle.js'
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import {
+	MAsyncSelect,
+	MButton,
+	MCheckbox,
+	MFilepond,
+	MFooter,
+	MForm,
+	MInput,
+	MSelect,
+	MTextarea,
+	TabContent,
+	TabOption,
+	Title,
+} from '../components/UI/'
+import globalConstants from '../config/globalConstants'
+import { appCreateSchema } from '../config/validationSchema'
+import { useActions } from '../hooks/'
+import '../styles/AppCreate.scss'
+import { FindErrors } from '../utils/'
 
 const AppCreate = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+	const appCreate = useSelector(state => state.app.appCreate)
+	const navigate = useNavigate()
+	const tabAppRef = useRef()
+	const tabInfoRef = useRef()
+	const tabImagesRef = useRef()
+	const tabAccessRef = useRef()
+	const { postAppCreate, setAppCreate, changeAppCreate, getCompanies } = useActions()
+	const [isNextTab, SetIsNextTab] = useState(true)
 
-  const select = useSelector(state => state.constants.select);
-  const ext = useSelector(state => state.constants.ext);
-  const app = useSelector(state => state.app.appCreate);
-  const routes = useSelector(state => state.constants.routes);
+	const {
+		register,
+		reset,
+		control,
+		getValues,
+		trigger,
+		setFocus,
+		clearErrors,
+		getFieldState,
+		formState: { errors },
+	} = useForm({
+		defaultValues: {
+			name: appCreate.name || '',
+			description: appCreate.description || '',
+			version: appCreate.version || '',
+			isAndroid: appCreate.isAndroid ?? true,
+			isIos: appCreate.isIos ?? true,
+			min_android: appCreate.min_android || '',
+			min_ios: appCreate.min_ios || '',
+			testFlight: appCreate.testFlight || '',
+			status: appCreate.status || {},
+			access: appCreate.access || {},
+			companies: appCreate.companies || [],
+			apkFile: [],
+			iconFile: [],
+			imagesFiles: [],
+		},
+		mode: 'onTouched',
+		resolver: yupResolver(appCreateSchema),
+	})
 
-  const [iconFile, SetIconFile] = useState('');
-  const [imagesFiles, SetImagesFiles] = useState('');
-  const [apkFile, SetApkFile] = useState('');
-  const [isNextTab, SetIsNextTab] = useState(true);
+	const isIos = useWatch({ control, name: 'isIos' })
+	const isAndroid = useWatch({ control, name: 'isAndroid' })
+	const isCompanies = useWatch({ control, name: 'access' })?.value === globalConstants.select.access[2].value
 
-  const appCreateBtn = () => {
-    const appCreate = {
-      name: app.name, 
-      status: app.status, 
-      description: app.description, 
-      version: app.version,
-      minAndroid: app.min_android, 
-      minIos: app.min_ios, 
-      testFlight: app.test_flight,
-      access: '',
-      apkFile: apkFile[0],
-      iconFile: iconFile[0],
-      imagesFiles: imagesFiles,
-      developer: "En+ Digital"
-    }
-    postAppCreate(appCreate)
-      .then(response => {
-        if (response) {
-          Clear();
-          navigate(routes.apps);
-        }
-      });
-  }
+	async function onClickAppCreate() {
+		const triggers = {
+			name: tabAppRef?.current,
+			...(isAndroid ? { apkFile: tabAppRef?.current } : {}),
+			...(isIos ? { testFlight: tabAppRef?.current } : {}),
+			version: tabInfoRef?.current,
+			...(isAndroid ? { min_android: tabInfoRef?.current } : {}),
+			...(isIos ? { min_ios: tabInfoRef?.current } : {}),
+			description: tabInfoRef?.current,
+			iconFile: tabImagesRef?.current,
+			imagesFiles: tabImagesRef?.current,
+			status: tabAccessRef?.current,
+			access: tabAccessRef?.current,
+			...(isCompanies ? { companies: tabAccessRef?.current } : {}),
+		}
+		!isIos && clearErrors(['min_ios', 'testFlight'])
+		!isAndroid && clearErrors(['min_android', 'apkFile'])
+		!isCompanies && clearErrors(['companies'])
 
-  const validate = {
-    length: 40,
-  }
-  const Clear = () => {
-    dispatch(setAppCreate({}));
+		if (await FindErrors(getFieldState, setFocus, trigger, triggers)) return
 
-    SetApkFile('');
-    SetImagesFiles('');
-    SetIconFile('');
-  }
+		const iconFile = getValues('iconFile')
+		const apkFile = getValues('apkFile')
+		const imagesFiles = getValues('imagesFiles')
+		const companies = getValues('companies')
 
-  const NextTab = () => new bootstrap.Tab(isNextTab)?.show();
+		const app = {
+			name: getValues('name'),
+			description: getValues('description'),
+			version: getValues('version'),
+			minAndroid: isAndroid ? getValues('min_android') : '',
+			minIos: isIos ? getValues('min_ios') : '',
+			testFlight: isIos ? getValues('testFlight') : '',
+			status: getValues('status.value'),
+			access: getValues('access.value'),
+			companies: isCompanies ? companies.map(company => company.name).join(',') : '',
+			apkFile: isAndroid && apkFile.length > 0 ? apkFile[0] : '',
+			iconFile: iconFile.length > 0 ? iconFile[0] : '',
+			imagesFiles: imagesFiles.length > 0 ? imagesFiles : '',
+			developer: 'En+ Digital',
+		}
 
-  useEffect(() => {
-    let tabAccess = document.querySelector('#nav-tab #nav-access-tab[data-bs-toggle="tab"]');
-    let tabImages = document.querySelector('#nav-images-tab[data-bs-toggle="tab"]');
-    let tabInfo = document.querySelector('#nav-info-tab[data-bs-toggle="tab"]');
-    let tabApp = document.querySelector('#nav-app-tab[data-bs-toggle="tab"]');
+		postAppCreate(app).then(({ meta }) => {
+			if (meta?.requestStatus === 'fulfilled') {
+				onResetData()
+				navigate(globalConstants.routes.apps)
+			}
+		})
+	}
 
-    tabAccess?.addEventListener('show.bs.tab', () => SetIsNextTab(false));
-    tabImages?.addEventListener('show.bs.tab', () => SetIsNextTab(tabAccess));
-    tabInfo?.addEventListener('show.bs.tab', () => SetIsNextTab(tabImages));
-    tabApp?.addEventListener('show.bs.tab', () => SetIsNextTab(tabInfo))
-    SetIsNextTab(tabInfo);
-  }, []);
+	const onResetData = () => {
+		setAppCreate({})
+		reset({
+			name: '',
+			description: '',
+			version: '',
+			isAndroid: true,
+			isIos: true,
+			min_android: '',
+			min_ios: '',
+			testFlight: '',
+			status: {},
+			access: {},
+			companies: [],
+			apkFile: [],
+			iconFile: [],
+			imagesFiles: [],
+		})
+	}
 
-  return (
-    <div>
-      <Title title="Публикация" subtitle="Опишите и загрузите новое приложение в маркет"/>
-      <nav>
-        <div className="nav nav-tabs" id="nav-tab" role="tablist">
-          <TabOption name="Приложение" id="app" active="true"/>
-          <TabOption name="О приложении" id="info"/>
-          <TabOption name="Графика" id="images"/>
-          <TabOption name="Доступ" id="access"/>
-        </div>
-      </nav>
-      <div className="tab-content mt-4" id="nav-tabContent">
-        <TabContent id="app" active="true">
-          <MForm validate={validate} title="Название" subtitle="Напишите название приложения">
-            <MInput className="ui-size-xl" default={app.name} changeValue={value => dispatch(setAppCreate({...app, name: value}))} placeholder="Название"/>
-          </MForm>
-          <MForm className="mb-4"  title="Платформа" subtitle="Выберите платформы под которые выпускается приложение">
-            <MCheckbox className="ui-size-xl" default={app.isAndroid || false} changeValue={value => dispatch(setAppCreate({...app, isAndroid: value}))} name="Android"/>
-            <MCheckbox className="ui-size-xl" default={app.isIos || false} changeValue={value => dispatch(setAppCreate({...app, isIos: value}))} name="IOS"/>
-          </MForm>
-          {
-            app?.isAndroid &&
-            <MForm className="mb-4" title="Файл" subtitle="Загрузите приложение с новой версией для Android" >
-              <MFilepond className="ui-size-xl" default={apkFile} changeValue={SetApkFile} ext={ext.android} maxFiles={1} name="apk" placeholder="Нажмите или перетащите файл apk..."/>
-            </MForm>
-          }
-          {
-            app?.isIos &&
-            <MForm validate={validate} title="TestFlight" subtitle="Вставьте ссылку на приложение ios в TestFlight">
-              <MInput className="ui-size-xl" default={app.test_flight} changeValue={value => dispatch(setAppCreate({...app, test_flight: value}))} placeholder="https://"/>
-            </MForm>
-          }
-        </TabContent>
+	useEffect(() => {
+		const tabAppCard = tabAccessRef?.current
+		const tabImages = tabImagesRef?.current
+		const tabInfo = tabInfoRef?.current
+		const tabApp = tabAppRef?.current
 
-        <TabContent id="info">
-          <MForm validate={validate} title="Версия" subtitle="Напишите версию">
-            <MInput className="ui-size-s" default={app.version} changeValue={value => dispatch(setAppCreate({...app, version: value}))} placeholder="1.0.1"/>
-          </MForm>
-          {
-            app?.isAndroid &&
-            <MForm validate={validate} title="Требование версии Android" subtitle="Напишите минимальную версию Android">
-              <MInput className="ui-size-s" default={app.min_android} changeValue={value => dispatch(setAppCreate({...app, min_android: value}))} placeholder="14.0"/>
-            </MForm>
-          }
-          {
-            app?.isIos &&
-            <MForm validate={validate} title="Требование версии IOS" subtitle="Напишите минимальную версию IOS">
-              <MInput className="ui-size-s" default={app.min_ios} changeValue={value => dispatch(setAppCreate({...app, min_ios: value}))} placeholder="5.0"/>
-            </MForm>
-          }
-          <MForm validate={validate} title="Описание приложения" subtitle="Напишите полное описание приложения">
-            <MTextarea className="ui-size-xl" default={app.description} changeValue={value => dispatch(setAppCreate({...app, description: value}))} placeholder="Приложение - средство для..."/>
-          </MForm>
-        </TabContent>
+		const nextFalse = () => SetIsNextTab(false)
+		const nextAccess = () => SetIsNextTab(tabAppCard)
+		const nextImages = () => SetIsNextTab(tabImages)
+		const nextInfo = () => SetIsNextTab(tabInfo)
 
-        <TabContent id="images">
-          <MForm className="mb-4" title="Значок приложения" subtitle="Загрузите значок приложения" >
-            <MFilepond className="ui-size-xl" default={iconFile} changeValue={SetIconFile} ext={ext.images} maxFiles={1} name="iconFile" placeholder="Нажмите или перетащите изображениe..."/>
-          </MForm>
-          <MForm className="mb-4" title="Фотографии" subtitle="Загрузите фотографии для ознакомления с работой приложения" >
-            <MFilepond className="ui-size-xl" default={imagesFiles} changeValue={SetImagesFiles} ext={ext.images} maxFiles={10} name="imagesFiles" placeholder="Нажмите или перетащите изображения..."/>
-          </MForm>
-        </TabContent>
+		tabAppCard?.addEventListener('show.bs.tab', nextFalse)
+		tabImages?.addEventListener('show.bs.tab', nextAccess)
+		tabInfo?.addEventListener('show.bs.tab', nextImages)
+		tabApp?.addEventListener('show.bs.tab', nextInfo)
 
-        <TabContent id="access">
-          <MForm className="mb-4" title="Статус приложения" subtitle="Выберите статус версии приложения в маркете" >
-            <MSelect className="ui-size-m" default={app.status} changeValue={value => dispatch(setAppCreate({...app, status: value}))} options={select.status}/>
-          </MForm>
-          <MForm className="mb-4" title="Доступ к приложению" subtitle="Выберите уровень доступа к приложению" >
-            <MSelect className="ui-size-m" default={app.companies} changeValue={_ => dispatch(setAppCreate({...app, companies: null}))} options={select.access}/>
-          </MForm>
-        </TabContent>
-      </div>
-      <MFooter>
-        {
-          isNextTab
-          ?
-            <MButton className="ui-size-xs" name="Далее" onClick={() => NextTab()}/>
-          :
-            <MButton className="ui-size-xs" name="Опубликовать" onClick={appCreateBtn} active="true"/>
-        }
-      </MFooter>
-    </div>
-  )
+		SetIsNextTab(tabInfo)
+
+		return () => {
+			tabAppCard?.removeEventListener('show.bs.tab', nextFalse)
+			tabImages?.removeEventListener('show.bs.tab', nextAccess)
+			tabInfo?.removeEventListener('show.bs.tab', nextImages)
+			tabApp?.removeEventListener('show.bs.tab', nextInfo)
+		}
+	}, [tabAccessRef, tabImagesRef, tabInfoRef, tabAppRef])
+
+	return (
+		<div>
+			<Title title='Публикация' subtitle='Опишите и загрузите новое приложение в маркет' />
+			<nav>
+				<div className='nav nav-tabs' id='nav-tab' role='tablist'>
+					<TabOption ref={tabAppRef} name='Приложение' id='app' active='true' />
+					<TabOption ref={tabInfoRef} name='О приложении' id='info' />
+					<TabOption ref={tabImagesRef} name='Графика' id='images' />
+					<TabOption ref={tabAccessRef} name='Доступ' id='access' />
+				</div>
+			</nav>
+			<div className='tab-content mt-4' id='nav-tabContent'>
+				<TabContent id='app' active='true'>
+					<MForm title='Название' subtitle='Напишите название приложения'>
+						<MInput
+							{...register('name')}
+							error={!!errors?.name}
+							message={errors?.name?.message}
+							onEdited={name => changeAppCreate({ name })}
+							className='ui-size-xl'
+							placeholder='Название'
+						/>
+					</MForm>
+					<MForm className='mb-4' title='Платформа' subtitle='Выберите платформы под которые выпускается приложение'>
+						<MCheckbox
+							{...register('isAndroid')}
+							onEdited={isAndroid => changeAppCreate({ isAndroid })}
+							className='ui-size-xl'
+							text='Android'
+						/>
+						<MCheckbox
+							{...register('isIos')}
+							onEdited={isIos => changeAppCreate({ isIos })}
+							className='ui-size-xl'
+							text='IOS'
+						/>
+					</MForm>
+					{isAndroid && (
+						<MForm className='mb-4' title='Файл' subtitle='Загрузите приложение с новой версией для Android'>
+							<MFilepond
+								name={'apkFile'}
+								control={control}
+								error={!!errors?.apkFile}
+								message={errors?.apkFile?.message}
+								maxFiles={1}
+								ext={globalConstants.ext.android}
+								className='ui-size-xl'
+								placeholder='Нажмите или перетащите файл apk...'
+							/>
+						</MForm>
+					)}
+					{isIos && (
+						<MForm title='TestFlight' subtitle='Вставьте ссылку на приложение ios в TestFlight'>
+							<MInput
+								{...register('testFlight')}
+								error={!!errors?.testFlight}
+								message={errors?.testFlight?.message}
+								onEdited={testFlight => changeAppCreate({ testFlight })}
+								className='ui-size-xl'
+								placeholder='https://'
+							/>
+						</MForm>
+					)}
+				</TabContent>
+
+				<TabContent id='info'>
+					<MForm title='Версия' subtitle='Напишите версию'>
+						<MInput
+							{...register('version')}
+							error={!!errors?.version}
+							message={errors?.version?.message}
+							onEdited={version => changeAppCreate({ version })}
+							className='ui-size-s'
+							placeholder='1.0.1'
+						/>
+					</MForm>
+					{isAndroid && (
+						<MForm title='Требование версии Android' subtitle='Напишите минимальную версию Android'>
+							<MInput
+								{...register('min_android')}
+								error={!!errors?.min_android}
+								message={errors?.min_android?.message}
+								onEdited={min_android => changeAppCreate({ min_android })}
+								className='ui-size-s'
+								placeholder='14.0'
+							/>
+						</MForm>
+					)}
+					{isIos && (
+						<MForm title='Требование версии IOS' subtitle='Напишите минимальную версию IOS'>
+							<MInput
+								{...register('min_ios')}
+								error={!!errors?.min_ios}
+								message={errors?.min_ios?.message}
+								onEdited={min_ios => changeAppCreate({ min_ios })}
+								className='ui-size-s'
+								placeholder='5.0'
+							/>
+						</MForm>
+					)}
+					<MForm title='Описание приложения' subtitle='Напишите полное описание приложения'>
+						<MTextarea
+							{...register('description')}
+							error={!!errors?.description}
+							message={errors?.description?.message}
+							onEdited={description => changeAppCreate({ description })}
+							className='ui-size-xl'
+							placeholder='Приложение - средство для...'
+						/>
+					</MForm>
+				</TabContent>
+
+				<TabContent id='images'>
+					<MForm className='mb-4' title='Значок приложения' subtitle='Загрузите значок приложения'>
+						<MFilepond
+							name={'iconFile'}
+							control={control}
+							error={!!errors?.iconFile}
+							message={errors?.iconFile?.message}
+							maxFiles={1}
+							ext={globalConstants.ext.images}
+							className='ui-size-xl'
+							placeholder='Нажмите или перетащите изображениe...'
+						/>
+					</MForm>
+					<MForm
+						className='mb-4'
+						title='Фотографии'
+						subtitle='Загрузите фотографии для ознакомления с работой приложения'
+					>
+						<MFilepond
+							name={'imagesFiles'}
+							control={control}
+							error={!!errors?.imagesFiles}
+							message={errors?.imagesFiles?.message}
+							maxFiles={10}
+							ext={globalConstants.ext.images}
+							className='ui-size-xl'
+							placeholder='Нажмите или перетащите изображения...'
+						/>
+					</MForm>
+				</TabContent>
+
+				<TabContent id='access'>
+					<MForm className='mb-4' title='Статус приложения' subtitle='Выберите статус версии приложения в маркете'>
+						<MSelect
+							{...register('status')}
+							control={control}
+							error={!!errors?.status?.value}
+							message={errors?.status?.value?.message}
+							onEdited={status => changeAppCreate({ status })}
+							options={globalConstants.select.status}
+							className='ui-size-m'
+						/>
+					</MForm>
+					<MForm className='mb-4' title='Доступ к приложению' subtitle='Выберите уровень доступа к приложению'>
+						<MSelect
+							{...register('access')}
+							control={control}
+							error={!!errors?.access?.value}
+							message={errors?.access?.value?.message}
+							onEdited={access => changeAppCreate({ access })}
+							options={globalConstants.select.access}
+							className='ui-size-m'
+						/>
+					</MForm>
+					{isCompanies && (
+						<MForm title='Компании' subtitle='Выберите компании доступным приложение'>
+							<MAsyncSelect
+								{...register('companies')}
+								control={control}
+								error={!!errors?.companies}
+								message={errors?.companies?.message}
+								onEdited={companies => changeAppCreate({ companies })}
+								request={getCompanies}
+								className='ui-size-xl'
+								isMulti={true}
+							/>
+						</MForm>
+					)}
+				</TabContent>
+			</div>
+			<MFooter>
+				<h6 className='cancel' onClick={onResetData}>
+					Сбросить
+				</h6>
+				{isNextTab ? (
+					<MButton name='Далее' onClick={() => new Tab(isNextTab)?.show()} className='ui-size-xs' />
+				) : (
+					<MButton name='Опубликовать' onClick={onClickAppCreate} active='true' className='ui-size-xs' />
+				)}
+			</MFooter>
+		</div>
+	)
 }
 
 export default AppCreate

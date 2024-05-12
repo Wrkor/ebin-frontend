@@ -1,30 +1,24 @@
 import React, { useEffect } from 'react'
-import { useParams} from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { MAppCard } from '../components/UI'; 
-import { getApp } from '../API/app.service';
-import { setAppCashed } from '../store/appReducer';
-import Loading from './Loading.jsx';
-
-import '../styles/AppCard.scss';
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { MAppCard } from '../components/UI'
+import useActions from '../hooks/useActions'
+import '../styles/AppCard.scss'
+import Loading from './Loading'
 
 const AppCard = () => {
-  const dispatch = useDispatch();
-  const app = useSelector(state => state.app.appCashed);
+	const appCashed = useSelector(state => state.app.appCashed)
+	const { getApp, setAppCashed, clearAppCashed } = useActions()
+	const urlID = useParams().id
 
-  const urlID = useParams().id;
+	useEffect(() => {
+		getApp({ id: urlID }).then(({ payload, meta }) => {
+			if (meta?.requestStatus === 'fulfilled') setAppCashed(payload)
+		})
+		return () => clearAppCashed()
+	}, [getApp, setAppCashed, clearAppCashed, urlID])
 
-  useEffect(() => {
-    dispatch(getApp({id: urlID, action: setAppCashed}));
-  }, [dispatch, urlID]);
-
-  return (
-    app && app.id
-    ? 
-      <MAppCard app={app}/>
-    :
-      <Loading />
-  )
+	return appCashed?.id ? <MAppCard app={appCashed} /> : <Loading />
 }
 
 export default AppCard

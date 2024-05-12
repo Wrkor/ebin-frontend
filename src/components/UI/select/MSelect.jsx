@@ -1,27 +1,39 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
+import React, { forwardRef } from 'react'
+import { useController } from 'react-hook-form'
+import Select from 'react-select'
 
-const MSelect = ({changeValue, ...props}) => {
-    const options = [
-        {
-            value: 'disabled', 
-            label: 'Выберите...', 
-            isDisabled: true, 
-        }, 
-        ...props.options
-    ];
-    const defaultValue = props.options.filter(option => option.value === props.default);
-    const [value, setValue] = useState(defaultValue.length === 0 ? options[0] : defaultValue);
-    
-    const onChangeValue = (val) => { 
-        setValue(val.value);
-        changeValue(val.value);
-    };
-    
+const MSelect = forwardRef(({ control, name, options, onEdited, error, message, className, ...props }, _) => {
+	const { field } = useController({ name, control })
+	return (
+		<>
+			<Select
+				{...props}
+				ref={field.ref}
+				value={
+					Array.isArray(field?.value)
+						? !!field?.value[0]?.value
+							? field.value
+							: ''
+						: !!field?.value?.value
+						? field.value
+						: ''
+				}
+				onChange={option => {
+					field.onChange(option)
+					field.onBlur(option)
+					onEdited && onEdited(option)
+				}}
+				onBlur={field.onBlur}
+				options={options}
+				classNamePrefix='react-select'
+				className={`react-select ${className ?? ''}`}
+				noOptionsMessage={() => 'Ничего не найдено'}
+				loadingMessage={() => 'Идет поиск...'}
+				placeholder='Выберите...'
+			/>
+			{error && <p className='error-msg'>{message}</p>}
+		</>
+	)
+})
 
-    return (
-        <Select options={options} defaultValue={value} onChange={onChangeValue} {...props} classNamePrefix="react-select" className={`react-select ${props.className ?? ""}`}/>
-    );
-};
-
-export default MSelect;
+export default MSelect

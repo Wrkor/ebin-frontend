@@ -1,0 +1,16 @@
+@import '../../../styles/_mixins.scss';
+
+div.modal {
+	> div.dialog {
+		margin-top: 80px !important;
+		margin-right: 30px !important;
+
+		width: 250px;
+
+		div.content {
+			background-color: var(--app-modal-bg);
+			border: none;
+			filter: var(--app-filter);
+		}
+	}
+}

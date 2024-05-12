@@ -2,7 +2,7 @@
 
 div.form {
     width: fit-content;
-
+    margin-bottom: 20px;
     .title {
         @include text-400-20;
         color: var(--app-black-90);

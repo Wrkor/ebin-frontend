@@ -1,0 +1,43 @@
+@import "../../../styles/_mixins.scss";
+
+tr.app {  
+    th {
+        padding: 15px 8px !important;
+        vertical-align: middle;
+
+        div {
+            height: 100%;
+
+            h6 {
+                text-align: center;
+                @include text-400-16-xs;
+                @include mq-sm {
+                    @include text-400-16;
+                }
+            }
+        }
+        .textarea {
+            height: 150px;
+        }
+        &:last-child div{
+            width: 80px;
+
+            @include mq-xl {
+                width: 200px;
+            }
+            svg {
+                cursor: pointer;
+    
+                path {
+                    stroke: var(--app-black);
+                    transition: stroke $time-Animation $type-Animation;
+                }
+                &:hover {
+                    path {
+                        stroke: $active-Color;
+                    }
+                }
+            }
+        }
+    }
+}

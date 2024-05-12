@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
-import classes from './MInput.module.scss';
+import React, { forwardRef } from 'react'
+import classes from './MInput.module.scss'
 
-const MInput = ({changeValue, ...props}) => {
-    const [value, setValue] = useState(props.default ?? '');
+const MInput = forwardRef(({ onBlur, onEdited, error, message, className, ...props }, ref) => {
+	return (
+		<>
+			<input
+				{...props}
+				ref={ref}
+				onBlur={e => {
+					onBlur(e)
+					onEdited && onEdited(e.target.value)
+				}}
+				className={`${classes.input} ${className ?? ''}`}
+				type='text'
+			/>
+			{error && <p className='error-msg'>{message}</p>}
+		</>
+	)
+})
 
-    const onChangeValue = (value) => { 
-        setValue(value);
-        changeValue(value);
-    };
-    return (
-        <input value={value} onChange={e => onChangeValue(e.target.value)} {...props} className={`${classes.input} ${props.className || ""}`} type="text" placeholder={props.placeholder}/>
-    );
-};
-
-export default MInput;
+export default MInput

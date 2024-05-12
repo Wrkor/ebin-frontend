@@ -1,100 +1,134 @@
-@import "_mixins.scss";
-@import "../../node_modules/bootstrap/scss/functions";
-@import "../../node_modules/bootstrap/scss/variables";
-@import "../../node_modules/bootstrap/scss/mixins";
+@import '_mixins.scss';
+@import '../../node_modules/bootstrap/scss/functions';
+@import '../../node_modules/bootstrap/scss/variables';
+@import '../../node_modules/bootstrap/scss/mixins';
 
 * {
-  margin: 0px;
-  padding: 0px;
-  box-sizing: border-box;
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
 }
 
 a {
-  text-decoration: none;
+	text-decoration: none;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
-  margin: 0px;
-  line-height: 100% !important;
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0px;
+	line-height: 100% !important;
 }
 
 .modal-backdrop {
-  opacity: 0 !important;
+	opacity: 0 !important;
 }
 
 .ui-size-xs {
-  width: 200px;
+	width: 200px;
 }
 
 .ui-size-s {
-  width: 300px;
+	width: 300px;
 }
 
 .ui-size-m {
-  width: 400px;
+	width: 400px;
 }
 
 .ui-size-l {
-  width: 500px;
+	width: 500px;
 }
 
 .ui-size-xl {
-  width: 600px;
+	width: 600px;
 }
 
-input, textarea, select {
-  outline: none;
-  line-height: 100%;
+input,
+textarea,
+select {
+	outline: none;
+	line-height: 100%;
 }
 
 table {
-  border-color: var(--app-border-table);
+	border-color: var(--app-border-table);
+}
+
+div.table-void h5 {
+	@include text-400-16;
+	color: var(--app-black-90);
+}
+
+p.error-msg {
+	@include text-400-16;
+	margin-top: 20px;
+	color: var(--app-error-color);
 }
 
 div.react-select {
-    
-  > div {
-      background-color: var(--app-input-color);
-      padding: 10px;
-      border-radius: 8px;
-      filter: var(--app-filter);
-      border: none;
-      box-shadow: none;
-      
-      &.react-select__control {
-          cursor: text;
+	> div {
+		background-color: var(--app-input-color);
+		padding: 10px;
+		border-radius: 8px;
+		filter: var(--app-filter);
+		border: none;
+		box-shadow: none;
 
-          .react-select__single-value, .react-select__input-container {
-              @include text-300-20;
-              color:var(--app-black);
-          }
-          .react-select__indicators {
-            cursor: pointer;
-          }
-      } 
-      &.react-select__menu {
-          .react-select__option {
-              cursor: pointer;
-              border-radius: 8px;
-              background-color: transparent;
-              @include text-300-16;
-              color: var(--app-black);
-              transition: color $time-Animation $type-Animation;
+		&.react-select__control {
+			cursor: text;
 
-              &:hover {
-                  color: $active-Color;
-              }
-          }
-      } 
+			.react-select__single-value,
+			.react-select__input-container {
+				@include text-300-20;
+				color: var(--app-black);
+			}
+			.react-select__indicators {
+				cursor: pointer;
+			}
+		}
+		&.react-select__menu {
+			.react-select__option {
+				cursor: pointer;
+				border-radius: 8px;
+				background-color: transparent;
+				@include text-300-16;
+				color: var(--app-black);
+				transition: color $time-Animation $type-Animation;
 
-      &:hover {
-          border: none;
-          box-shadow: none;
-      } 
-  }
+				&:hover {
+					color: $active-Color;
+				}
+			}
+		}
+
+		&:hover {
+			border: none;
+			box-shadow: none;
+		}
+	}
 }
 
 nav:has(div.nav.nav-tabs) {
-  width: fit-content;
+	width: fit-content;
 }
 
+.filepond--panel-root {
+	background-color: var(--app-input-color) !important;
+}
+.filepond--wrapper {
+	filter: var(--app-filter);
+	cursor: pointer;
+}
+
+.filepond--drop-label label {
+	cursor: pointer !important;
+	color: var(--app-black) !important;
+	font-weight: 300 !important;
+	font-size: 18px !important;
+	font: var(--bs-font-sans-serif);
+}

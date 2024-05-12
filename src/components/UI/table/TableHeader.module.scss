@@ -7,16 +7,26 @@ th {
         cursor: pointer;
 
         h6 {
+            margin-left: 20px;
             transition: color $time-Animation $type-Animation;
             @include text-300-16-xs;
             @include mq-sm {
                 @include text-300-16;
             }
         }
-        svg path{
-            transition: stroke $time-Animation $type-Animation;
-            stroke: var(--app-black-90);
-            stroke-width: 1px;
+        svg {
+            transition: transform $time-Animation $type-Animation;
+            path{
+                transition: stroke $time-Animation $type-Animation;
+                stroke: var(--app-black-90);
+                stroke-width: 1px;
+            }
+            &.activeEnc {
+                transform: rotate(180deg);
+            }
+            &.activeDec {
+                transform: rotate(360deg);
+            }
         }
 
         &:hover {

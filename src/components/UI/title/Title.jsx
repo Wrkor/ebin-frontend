@@ -1,13 +1,13 @@
 import React from 'react'
-import classes from './Title.module.scss';
+import classes from './Title.module.scss'
 
-const Title = ({...props}) => {
-  return (
-    <div className='mb-5'>
-        <h4 className={`${classes.title} mb-4`}>{props.title}</h4>
-        <h6 className={`${classes.subtitle} m-0`}>{props.subtitle}</h6>
-    </div>
-  )
+const Title = ({ title, subtitle }) => {
+	return (
+		<div className='mb-5'>
+			<h4 className={`mb-4 ${classes.title}`}>{title || ''}</h4>
+			<h6 className={`m-0 ${classes.subtitle}`}>{subtitle || ''}</h6>
+		</div>
+	)
 }
 
 export default Title

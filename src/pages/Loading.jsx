@@ -1,16 +1,16 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
+import { useTheme } from '../hooks'
 
 const Loading = () => {
-  const isBlackTheme = useSelector(state => state.constants.isBlackTheme);
+	const { isBlackTheme } = useTheme()
 
-  return (
-    <div className='d-flex w-100 justify-content-center mt-5'>
-      <div className={`spinner-border ${isBlackTheme ? "text-light" : ""}`} role="status">
-        <span className="visually-hidden">Loading...</span>
-      </div>
-    </div>
-  )
+	return (
+		<div className='d-flex w-100 justify-content-center mt-5'>
+			<div className={`spinner-border ${isBlackTheme ? 'text-light' : ''}`} role='status'>
+				<span className='visually-hidden'>Loading...</span>
+			</div>
+		</div>
+	)
 }
 
 export default Loading

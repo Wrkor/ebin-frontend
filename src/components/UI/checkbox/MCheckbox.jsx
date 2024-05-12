@@ -1,23 +1,27 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
-import classes from './MCheckbox.module.scss';
+import React, { forwardRef } from 'react'
+import { useTheme } from '../../../hooks'
+import classes from './MCheckbox.module.scss'
 
-const MCheckbox = ({changeValue, ...props}) => {
-    const [value, setValue] = useState(props.default ?? false);
-    const isBlackTheme = useSelector(state => state.constants.isBlackTheme);
-    const onChangeValue = () => { 
-        setValue(!value);
-        changeValue(!value);
-    };
+const MCheckbox = forwardRef(({ text, onChange, onEdited, className, value, ...props }, ref) => {
+	const { isBlackTheme } = useTheme()
 
-    return (
-        <div className={`${classes.check} d-flex mb-3 align-items-center ${props.className ?? ""}`}>
-            <label className={`${classes.check} ${isBlackTheme ? classes.black : ""}`}>
-                <input value={value} onChange={onChangeValue} {...props} checked={props.default ?? false} className = "" type="checkbox"/>
-            </label>
-            <h6 className='ms-2'>{props.name}</h6>
-        </div>
-    );
-};
+	return (
+		<div className={`d-flex mb-3 align-items-center ${classes.check} ${className ?? ''}`}>
+			<label className={`${classes.check} ${isBlackTheme && classes.black}`}>
+				<input
+					{...props}
+					ref={ref}
+					onChange={e => {
+						onChange(e)
+						onEdited && onEdited(e.target.checked)
+					}}
+					checked={value}
+					type='checkbox'
+				/>
+			</label>
+			<h6 className='ms-2'>{text}</h6>
+		</div>
+	)
+})
 
-export default MCheckbox;
+export default MCheckbox

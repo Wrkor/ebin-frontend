@@ -1,10 +1,12 @@
-import React from 'react';
-import classes from './MButton.module.scss';
+import React from 'react'
+import classes from './MButton.module.scss'
 
-const MButton = ({...props}) => {
-    return (
-        <button {...props} className={`${classes.button} ${props.active ? classes.active : ''} ${props.className ?? ''}`}>{props.name}</button>
-    );
-};
+const MButton = ({ name, className, active, ...props }) => {
+	return (
+		<button {...props} className={`${classes.button} ${active && classes.active} ${className ?? ''}`}>
+			{name}
+		</button>
+	)
+}
 
-export default MButton;
+export default MButton

@@ -1,117 +1,236 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { TabContent, TabOption, Title, MForm, MTextarea, MInput, MFilepond, MAsyncSelect, MAppCard, MFooter, MButton } from '../components/UI';
-import { getAppsId, postAppUpdate, getApp } from '../API/app.service';
-import { setUpdateCreate, changeUpdateCreate} from '../store/appReducer';
-import bootstrap from "bootstrap/dist/js/bootstrap.bundle.js";
-import '../styles/AppUpdate.scss';
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Tab } from 'bootstrap/dist/js/bootstrap.bundle.js'
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import {
+	MAppCard,
+	MAsyncSelect,
+	MButton,
+	MFilepond,
+	MFooter,
+	MForm,
+	MInput,
+	MTextarea,
+	TabContent,
+	TabOption,
+	Title,
+} from '../components/UI'
+import globalConstants from '../config/globalConstants'
+import { updateCreateSchema } from '../config/validationSchema'
+import useActions from '../hooks/useActions'
+import '../styles/AppUpdate.scss'
+import { FindErrors } from '../utils/'
 
 const AppUpdate = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+	const updateCreate = useSelector(state => state.app.updateCreate)
+	const navigate = useNavigate()
+	const tabAppRef = useRef()
+	const tabInfoRef = useRef()
+	const tabAppCardRef = useRef()
+	const { postUpdateCreate, getApp, getAppsId, setUpdateCreate, changeUpdateCreate, clearUpdateCreate } = useActions()
+	const [isNextTab, SetIsNextTab] = useState(true)
 
-  const ext = useSelector(state => state.constants.ext);
-  const update = useSelector(state => state.app.updateCreate);
-  const routes = useSelector(state => state.constants.routes);
+	const {
+		register,
+		setValue,
+		reset,
+		getValues,
+		trigger,
+		setFocus,
+		getFieldState,
+		formState: { errors },
+		control,
+	} = useForm({
+		defaultValues: {
+			version: updateCreate.version ?? '',
+			app: updateCreate.app ?? {},
+			select: updateCreate.select ?? {},
+			description: updateCreate.description ?? '',
+			testFlight: updateCreate.testFlight ?? '',
+			apkFile: [],
+		},
+		mode: 'onTouched',
+		resolver: yupResolver(updateCreateSchema),
+	})
 
-  const [apkFile, SetApkFile] = useState('');
-  const [isNextTab, SetIsNextTab] = useState(true);
+	async function onClickUpdateCreate() {
+		const triggers = {
+			select: tabAppRef?.current,
+			...(updateCreate?.app?.lastUpdate?.filePath ? { apkFile: tabAppRef?.current } : {}),
+			...(updateCreate?.app?.lastUpdate?.testFlight ? { testFlight: tabAppRef?.current } : {}),
+			version: tabInfoRef?.current,
+			description: tabInfoRef?.current,
+		}
 
-  const updateCreateBtn = () => {
-    const updateCreate = {
-      appId: update.app?.id, 
-      apkFile: apkFile[0], 
-      testFlight: update.app?.test_flight || '',
-      version: update.version, 
-      description:  update.description,
-    }
-    postAppUpdate(updateCreate)
-      .then(response => {
-        if (response) {
-          Clear();
-          navigate(routes.app.replace(":id", update.app?.id));
-        }
-      });
-  }
+		if (await FindErrors(getFieldState, setFocus, trigger, triggers)) return
 
-  const changeAppId = (value) => {
-    dispatch(getApp({id: value.name, action: setUpdateCreate}));
-  };
+		const apkFile = getValues('apkFile')
 
-  const validate = {
-    length: 40,
-  }
+		const update = {
+			appId: getValues('select.name'),
+			apkFile: updateCreate?.app?.lastUpdate?.filePath && apkFile.length > 0 ? apkFile[0] : '',
+			testFlight: updateCreate?.app?.lastUpdate?.testFlight ? getValues('testFlight') : '',
+			version: getValues('version'),
+			description: getValues('description'),
+		}
 
-  const NextTab = () => new bootstrap.Tab(isNextTab)?.show();
-  
-  const Clear = () => {
-    dispatch(changeUpdateCreate({}))
-    SetApkFile('');
-  }
+		postUpdateCreate(update).then(({ meta }) => {
+			if (meta?.requestStatus === 'fulfilled') {
+				onResetData()
+				navigate(globalConstants.routes.app.replace(':id', updateCreate?.app?.id))
+			}
+		})
+	}
 
-  useEffect(() => {
-    let tabCard = document.querySelector('#nav-app-card-tab[data-bs-toggle="tab"]');
-    let tabInfo = document.querySelector('#nav-info-tab[data-bs-toggle="tab"]');
-    let tabApp = document.querySelector('#nav-app-tab[data-bs-toggle="tab"]');
+	const onResetData = () => {
+		clearUpdateCreate()
+		reset({
+			version: '',
+			app: {},
+			select: {},
+			description: '',
+			testFlight: '',
+			apkFile: [],
+		})
+	}
 
-    tabCard?.addEventListener('show.bs.tab', () => SetIsNextTab(false));
-    tabInfo?.addEventListener('show.bs.tab', () => SetIsNextTab(false));
-    tabApp?.addEventListener('show.bs.tab', () => SetIsNextTab(tabInfo))
-    SetIsNextTab(tabInfo);
-  }, []);
+	useEffect(() => {
+		!!updateCreate?.select?.name &&
+			getApp({ id: updateCreate.select.name }).then(
+				({ payload, meta }) =>
+					meta?.requestStatus === 'fulfilled' &&
+					setUpdateCreate(payload).then(({ payload, meta }) => {
+						if (meta?.requestStatus === 'fulfilled') {
+							//TODO
+							setValue('testFlight', payload.object.testFlight)
+							trigger('select.name')
+							trigger('testFlight')
+						}
+					})
+			)
+	}, [getApp, setUpdateCreate, trigger, setValue, updateCreate?.select?.name])
 
-  return (
-    <div>
-      <Title title="Обновление" subtitle="Опишите новвоведение и обновите приложение в маркете"/>
-      <nav>
-        <div className="nav nav-tabs" id="nav-tab" role="tablist">
-          <TabOption name="Приложение" id="app" active="true"/>
-          <TabOption name="О приложении" id="info"/>
-          <TabOption name="Карточка приложения" id="app-card"/>
-        </div>
-      </nav>
-      <div className="tab-content mt-4" id="nav-tabContent">
-        <TabContent id="app" active="true">
-            <MForm className="mb-4" title="Приложение" subtitle="Выберите имеющееся приложение из маркета" >
-              <MAsyncSelect request={getAppsId} {...(update.app?.name ? { value: {value: update.app.id, label: update.app.name}} : { value: { value: 'disabled', label: 'Выберите...', isDisabled: true }})} className="ui-size-xl" changeValue={changeAppId} />
-            </MForm>
-            <MForm className="mb-4" title="Файл" subtitle="Загрузите приложение с новой версией для Android" >
-              <MFilepond className="ui-size-xl" default={apkFile} changeValue={SetApkFile} ext={ext.android} maxFiles={1} name="apk" placeholder="Нажмите или перетащите файл apk..."/>
-            </MForm>
-        </TabContent>
-        <TabContent id="info">
-            <MForm validate={validate} title="Новая версия" subtitle="Напишите новую версию">
-              <MInput className="ui-size-s" value={update?.version || ""} changeValue={value => dispatch(changeUpdateCreate({...update, version: value}))} placeholder="1.1.1"/>
-            </MForm>
-            <MForm validate={validate} title="Информация об обновлении" subtitle="Напишите внесенные изменения в приложение">
-              <MTextarea className="ui-size-xl" value={update?.description || ""} changeValue={value => dispatch(changeUpdateCreate({...update, description: value}))} placeholder="Добавлено...&#10;Обновлено..."/>
-            </MForm>
-        </TabContent>
-        <TabContent id="app-card">
-          {
-            update?.app && update?.app.id 
-            ?
-              <MAppCard app={update.app}/>
-            :
-            <div className='choiceApp w-100 d-flex justify-content-center mt-4'>
-              <h5>Выберите приложение</h5>
-            </div>
-          }
-        </TabContent>
-      </div>
-      <MFooter>
-        <h6 className='cancel' onClick={() => Clear()}>Сбросить</h6>
-        {
-          isNextTab
-          ?
-            <MButton className="ui-size-xs" name="Далее" onClick={() => NextTab()}/>
-          :
-            <MButton className="ui-size-s" name="Выпустить обновление" onClick={updateCreateBtn} active="true"/>
-        }
-      </MFooter>
-    </div>
-  )
+	useEffect(() => {
+		const tabAppCard = tabAppCardRef?.current
+		const tabInfo = tabInfoRef?.current
+		const tabApp = tabAppRef?.current
+
+		const nextFalse = () => SetIsNextTab(false)
+		const nextInfo = () => SetIsNextTab(tabInfo)
+
+		tabAppCard?.addEventListener('show.bs.tab', nextFalse)
+		tabInfo?.addEventListener('show.bs.tab', nextFalse)
+		tabApp?.addEventListener('show.bs.tab', nextInfo)
+
+		SetIsNextTab(tabInfo)
+
+		return () => {
+			tabAppCard?.removeEventListener('show.bs.tab', nextFalse)
+			tabInfo?.removeEventListener('show.bs.tab', nextFalse)
+			tabApp?.removeEventListener('show.bs.tab', nextInfo)
+		}
+	}, [tabAppRef, tabInfoRef, tabAppCardRef])
+
+	return (
+		<div>
+			<Title title='Обновление' subtitle='Опишите новвоведение и обновите приложение в маркете' />
+			<nav>
+				<div className='nav nav-tabs' id='nav-tab' role='tablist'>
+					<TabOption ref={tabAppRef} name='Приложение' id='app' active='true' />
+					<TabOption ref={tabInfoRef} name='О приложении' id='info' />
+					<TabOption ref={tabAppCardRef} name='Карточка приложения' id='app-card' />
+				</div>
+			</nav>
+			<div className='tab-content mt-4' id='nav-tabContent'>
+				<TabContent id='app' active='true'>
+					<MForm className='mb-4' title='Приложение' subtitle='Выберите имеющееся приложение из маркета'>
+						<MAsyncSelect
+							{...register('select')}
+							control={control}
+							error={!!errors?.select?.name}
+							message={errors?.select?.name?.message}
+							onEdited={select => changeUpdateCreate({ select })}
+							request={getAppsId}
+							className='ui-size-xl'
+						/>
+					</MForm>
+					{updateCreate?.app?.id && (
+						<>
+							{updateCreate?.app?.lastUpdate?.filePath && (
+								<MForm className='mb-4' title='Файл' subtitle='Загрузить приложение с новой версией для Android'>
+									<MFilepond
+										name='apkFile'
+										control={control}
+										error={!!errors?.apkFile}
+										message={errors?.apkFile?.message}
+										maxFiles={1}
+										ext={globalConstants.ext.android}
+										className='ui-size-xl'
+										placeholder='Нажмите или перетащите файл apk...'
+									/>
+								</MForm>
+							)}
+							{updateCreate?.app?.lastUpdate?.testFlight && (
+								<MForm title='TestFlight' subtitle='Изменить ссылку на приложение ios в TestFlight'>
+									<MInput
+										{...register('testFlight')}
+										error={!!errors?.testFlight}
+										message={errors?.testFlight?.message}
+										onEdited={testFlight => changeUpdateCreate({ testFlight })}
+										className='ui-size-xl'
+										placeholder='https://'
+									/>
+								</MForm>
+							)}
+						</>
+					)}
+				</TabContent>
+				<TabContent id='info'>
+					<MForm title='Новая версия' subtitle='Напишите новую версию'>
+						<MInput
+							{...register('version')}
+							error={!!errors?.version}
+							message={errors?.version?.message}
+							onEdited={version => changeUpdateCreate({ version })}
+							className='ui-size-s'
+							placeholder='1.1.1'
+						/>
+					</MForm>
+					<MForm title='Информация об обновлении' subtitle='Напишите внесенные изменения в приложение'>
+						<MTextarea
+							{...register('description')}
+							error={!!errors?.description}
+							message={errors?.description?.message}
+							onEdited={description => changeUpdateCreate({ description })}
+							className='ui-size-xl'
+							placeholder='Добавлено...&#10;Обновлено...'
+						/>
+					</MForm>
+				</TabContent>
+				<TabContent id='app-card'>
+					{updateCreate?.app?.id ? (
+						<MAppCard app={updateCreate.app} />
+					) : (
+						<div className='choiceApp w-100 d-flex justify-content-center mt-4'>
+							<h5>Выберите приложение</h5>
+						</div>
+					)}
+				</TabContent>
+			</div>
+			<MFooter>
+				<h6 className='cancel' onClick={onResetData}>
+					Сбросить
+				</h6>
+				{isNextTab ? (
+					<MButton name='Далее' onClick={() => new Tab(isNextTab)?.show()} className='ui-size-xs' />
+				) : (
+					<MButton active='true' name='Выпустить обновление' onClick={onClickUpdateCreate} className='ui-size-s' />
+				)}
+			</MFooter>
+		</div>
+	)
 }
 
 export default AppUpdate

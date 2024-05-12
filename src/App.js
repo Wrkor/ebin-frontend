@@ -1,42 +1,39 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.js'
 import React, { useEffect } from 'react'
-import {BrowserRouter} from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { postAuth } from './API/user.service';
-import { platform, blackTheme, whiteTheme } from './store/constantsReducer'
-import AppStyler from './components/styler/AppStyler.jsx'
-import AppRouter from "./router/AppRouter.jsx";
-import Header from "./components/header/Header.jsx"
-import globalConstant from './store/globalConstants';
-import "bootstrap/dist/css/bootstrap.min.css"
-import "bootstrap/dist/js/bootstrap.bundle.js"
-import './styles/App.scss';
+import { BrowserRouter } from 'react-router-dom'
+import { useWindowSize } from 'usehooks-ts'
+import Header from './components/header/Header'
+import Toasts from './components/modals/toasts/Toasts'
+import { useTheme } from './hooks'
+import useActions from './hooks/useActions'
+import AppRouter from './router/AppRouter'
+import AppStyler from './styler/AppStyler'
+import './styles/App.scss'
 
 const App = () => {
-    const dispatch = useDispatch();
-    const setSize = () => dispatch(platform(document.documentElement.clientWidth));
-    
-    setSize();
-    window.onresize = () => setSize();
-    
-    const theme = localStorage.getItem(globalConstant.localStorageKey.theme);
+	const { postAuth, setPlatforms } = useActions()
+	const { setTheme } = useTheme()
+	const { width } = useWindowSize()
 
-    if (!theme || theme === globalConstant.localStorageValue.theme.White) 
-        dispatch(whiteTheme());
+	useEffect(() => {
+		setPlatforms(width)
+	}, [width, setPlatforms])
 
-    else if (theme === globalConstant.localStorageValue.theme.Dark)
-        dispatch(blackTheme());
+	useEffect(() => {
+		postAuth()
+		setTheme()
+		// eslint-disable-next-line
+	}, [postAuth])
 
-    useEffect(() => {
-        dispatch(postAuth());
-    }, [dispatch])
-    
-    return (
-        <BrowserRouter>
-            <Header/>
-            <AppRouter />
-            <AppStyler/>
-        </BrowserRouter>
-    )
+	return (
+		<BrowserRouter>
+			<Header />
+			<AppRouter />
+			<AppStyler />
+			<Toasts />
+		</BrowserRouter>
+	)
 }
 
 export default App
