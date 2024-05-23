@@ -1,5 +1,7 @@
 import { Modal } from 'bootstrap'
 import React, { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import globalConstants from '../../../config/globalConstants'
 import { useTheme, useUser } from '../../../hooks'
 import useActions from '../../../hooks/useActions'
 import { ProfileSVG } from '../../SVG/'
@@ -11,13 +13,19 @@ const UserModal = () => {
 	const { user } = useUser()
 	const { isBlackTheme } = useTheme()
 	const userModalRef = useRef()
+	const navigate = useNavigate()
 
 	const onClickChangeThemeBtn = () => toggleTheme()
 
 	const logoutBtn = () => {
 		if (window.confirm('Уверены?')) {
 			Modal.getInstance(userModalRef?.current).hide()
-			postLogout()
+			postLogout().then(({ meta }) => {
+				if (meta?.requestStatus === 'fulfilled') {
+					navigate(globalConstants.routes.main)
+					navigate(0)
+				}
+			})
 		}
 	}
 

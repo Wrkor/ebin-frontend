@@ -1,174 +1,155 @@
-@import "../../../styles/_mixins.scss";
+@import '../../../styles/_mixins.scss';
 
 div.appCard {
-    margin-left: 160px;
-    margin-right: 210px;
-  
-    > div {
-      margin-bottom: 50px;
-  
-      > div {
+	margin-left: auto;
+	margin-right: auto;
 
-        h4.title {
-          @include text-400-24-xs;
-          @include mq-sm {
-            @include text-400-24;
-          }
-        }
-        h5.subtitle {
-          @include text-400-20-xs;
-          @include mq-sm {
-            @include text-400-20;
-          }
-          color: var(--app-black-90) !important;
-          margin-bottom: 20px;
-        }
-      }
-  
-      &.topic {
-    
-        div.info {
-          > div {
-            margin-bottom: 30px;
-    
-            &.title{
-    
-              > h3 {
-                margin-bottom: 20px;
-                @include text-400-32-xs;
-                @include mq-sm {
-                  @include text-400-32;
-                }
-              }
-              > h6 {
-                color: $active-Color;
-                font-weight: 500;
-                @include mq-sm {
-                  font-size: 20px;
-                }
-              }
-    
-            }
-            &.properties {
-    
-              > div {
-    
-                > h6 {
-                  margin-top: 8px;
-                  color: var(--app-black-90);
-                  font-weight: 500;
-                  font-size: 14px;
-                }
-                &.divider {
-                  width: 1px;
-                  height: 24px;
-                  background-color: var(--app-black-90);
-                  margin: 0px 40px;
-                }
-                > svg path {
-                    stroke: var(--app-black-90);
-                }
-              }
-            }
-            &.btns {
-    
-              :first-child {
-                margin-right: 30px;
-              }
-            }
-          }
-        }
-    
-        div.image > img {
-          width: 200px;
-          height: 200px;
-          border-radius: 30px;
-          cursor: pointer;
-        }
-      }
-      &.swiper {
+	> div {
+		margin-bottom: 50px;
 
-        .mswiper {
-          width: 660px;
+		> div {
+			h4.title {
+				@include text-400-24-xs;
+				@include mq-sm {
+					@include text-400-24;
+				}
+			}
+			h5.subtitle {
+				@include text-400-20-xs;
+				@include mq-sm {
+					@include text-400-20;
+				}
+				color: var(--app-black-90) !important;
+				margin-bottom: 20px;
+			}
+		}
 
-          img {
-            cursor: pointer;
-          }
-        }
-      }
-      &.about {
-  
-        > div {
-          margin-bottom: 30px;
-  
-          &:last-child {
-            margin-bottom: 0px;
-          }
-        }
-        > div.description > h6 {
-          @include text-400-16-xs;
-          @include mq-sm {
-            @include text-400-16;
-          }
-          width: 1350px;
-          word-wrap: break-word;
-          line-height: 150% !important;
-          font-weight: 300 !important;
-        }
-        > div.info > div {
-          > div.col1, > div.col2 {
-            width: 590px;
-  
-            > div.point {
-              margin-bottom: 20px;
-    
-              &:last-child {
-                margin-bottom: 0px;
-              }
-              > div {
-                color: var(--app-black-80);
-                font-size: 18px;
-                font-weight: 500px;
-              }
-              div.label {
-                margin-bottom: 5px;
-                font-weight: 400px;
-              }
-            }
-          }
-        }
-      }
-      &.services {
-        
-        div.reviews {
+		&.topic {
+			div.info {
+				> div {
+					margin-bottom: 30px;
 
-          h6.mark {
-            margin-top: 10px;
-            @include text-300-14;
-          }
-          h6.amount {
-            margin-top: 5px;
-            margin-bottom: 30px;
-            @include text-300-14;
-          }
-        }
-        div.updates {
+					&.title {
+						> h3 {
+							margin-bottom: 20px;
+							@include text-400-32-xs;
+							@include mq-sm {
+								@include text-400-32;
+							}
+						}
+						> h6 {
+							color: $active-Color;
+							font-weight: 500;
+							@include mq-sm {
+								font-size: 20px;
+							}
+						}
+					}
+					&.properties {
+						> div {
+							> h6 {
+								margin-top: 8px;
+								color: var(--app-black-90);
+								font-weight: 500;
+								font-size: 14px;
+							}
+							&.divider {
+								width: 1px;
+								height: 24px;
+								background-color: var(--app-black-90);
+								margin: 0px 40px;
+							}
+							> svg path {
+								stroke: var(--app-black-90);
+							}
+						}
+					}
+					&.btns {
+						:first-child {
+							margin-right: 30px;
+						}
+					}
+				}
+			}
 
-          div.update {
-            margin-top: 30px;
-          }
-          div.divider {
-            margin-top: 30px;
-          }
-        }
-        h5.notice {
-          @include text-400-16;
-        }
-      }
-    }
+			div.image > img {
+				width: 200px;
+				height: 200px;
+				border-radius: 30px;
+				cursor: pointer;
+			}
+		}
+		&.swiper {
+			.mswiper {
+				width: 660px;
 
-    div.divider {
-      height: 1px;
-      background-color: var(--app-border-table);
-    }
-  }
+				img {
+					cursor: pointer;
+				}
+			}
+		}
+		&.about {
+			> div {
+				margin-bottom: 30px;
+
+				&:last-child {
+					margin-bottom: 0px;
+				}
+			}
+			> div.description > h6 {
+				@include text-400-16-xs;
+				@include mq-sm {
+					@include text-400-16;
+				}
+				word-wrap: break-word;
+				line-height: 150% !important;
+				font-weight: 300 !important;
+			}
+			> div.info > div > div > div {
+				margin-bottom: 20px;
+
+				&:last-child {
+					margin-bottom: 0px;
+				}
+				> div {
+					color: var(--app-black-80);
+					font-size: 18px;
+					font-weight: 500px;
+				}
+				div.label {
+					margin-bottom: 5px;
+					font-weight: 400px;
+				}
+			}
+		}
+		&.services {
+			div.reviews {
+				h6.mark {
+					margin-top: 10px;
+					@include text-300-14;
+				}
+				h6.amount {
+					margin-top: 5px;
+					margin-bottom: 30px;
+					@include text-300-14;
+				}
+			}
+			div.updates {
+				div.update {
+					margin-top: 30px;
+				}
+				div.divider {
+					margin-top: 30px;
+				}
+			}
+			h5.notice {
+				@include text-400-16;
+			}
+		}
+	}
+
+	div.divider {
+		height: 1px;
+		background-color: var(--app-border-table);
+	}
+}

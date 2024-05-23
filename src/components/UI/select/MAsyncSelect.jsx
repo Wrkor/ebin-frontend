@@ -25,12 +25,17 @@ const MAsyncSelect = forwardRef(
 					{...props}
 					ref={field.ref}
 					value={
-						Array.isArray(field?.value) ? !!field?.value[0]?.name && field.value : !!field?.value?.name && field.value
+						Array.isArray(field?.value)
+							? !!field?.value[0]?.name
+								? field.value
+								: ''
+							: !!field?.value?.name
+							? field.value
+							: ''
 					}
 					loadOptions={loadOptions}
 					onChange={option => {
 						field.onChange(option)
-						field.onBlur(option)
 						onEdited && onEdited(option)
 					}}
 					onBlur={field.onBlur}

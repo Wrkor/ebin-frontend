@@ -341,7 +341,8 @@ const AppCreate = () => {
 								onEdited={companies => changeAppCreate({ companies })}
 								request={getCompanies}
 								className='ui-size-xl'
-								isMulti={true}
+								closeMenuOnSelect={false}
+								isMulti
 							/>
 						</MForm>
 					)}

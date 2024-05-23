@@ -10,28 +10,42 @@ const AppRouter = () => {
 	const location = useLocation()
 
 	return !isAuthLoading ? (
-		isAuth && user?.roleId === 1 ? (
-			<>
-				<Sidebar>
+		isAuth ? (
+			user?.roleId === 1 ? (
+				<>
+					<Sidebar>
+						<Routes>
+							{privateRoutes.map(route => (
+								<Route element={route.element} path={route.path} exact={route.exact} key={route.path} />
+							))}
+							<Route
+								path={globalConstants.routes.login}
+								element={<Navigate to={location?.state?.prevUrl || globalConstants.routes.apps} replace />}
+							/>
+							{publicRoutes.map(route => (
+								<Route element={route.element} path={route.path} exact={route.exact} key={route.path} />
+							))}
+							<Route
+								path={globalConstants.routes.main}
+								element={<Navigate to={globalConstants.routes.apps} replace />}
+							/>
+							<Route
+								path={globalConstants.routes.any}
+								element={<Navigate to={globalConstants.routes.error404} replace />}
+							/>
+						</Routes>
+					</Sidebar>
+				</>
+			) : (
+				<>
 					<Routes>
-						{privateRoutes.map(route => (
-							<Route element={route.element} path={route.path} exact={route.exact} key={route.path} />
-						))}
-						<Route
-							path={globalConstants.routes.login}
-							element={<Navigate to={location?.state?.prevUrl || globalConstants.routes.apps} replace />}
-						/>
-						{publicRoutes.map(route => (
-							<Route element={route.element} path={route.path} exact={route.exact} key={route.path} />
-						))}
-						<Route path={globalConstants.routes.main} element={<Navigate to={globalConstants.routes.apps} replace />} />
 						<Route
 							path={globalConstants.routes.any}
 							element={<Navigate to={globalConstants.routes.error404} replace />}
 						/>
 					</Routes>
-				</Sidebar>
-			</>
+				</>
+			)
 		) : (
 			<>
 				<Routes>

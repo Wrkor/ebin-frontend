@@ -59,6 +59,31 @@ table {
 	border-color: var(--app-border-table);
 }
 
+.g-0 {
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+}
+.app-container {
+	@include make-container();
+	max-width: 300px;
+
+	@include mq-sm {
+		max-width: 500px;
+	}
+	@include mq-md {
+		max-width: 700px;
+	}
+	@include mq-lg {
+		max-width: 800px;
+	}
+	@include mq-xl {
+		max-width: 1000px;
+	}
+	@include mq-xxl {
+		max-width: 1200px;
+	}
+}
+
 div.table-void h5 {
 	@include text-400-16;
 	color: var(--app-black-90);

@@ -82,7 +82,7 @@ const MAppCard = ({ app }) => {
 				<MSwiper className={classes.mswiper} ref={imagesRef} images={app.images} />
 			</div>
 
-			<div className={classes.about}>
+			<div className={`app-container g-0 ${classes.about}`}>
 				<div>
 					<h4 className={classes.title}>О приложении</h4>
 				</div>
@@ -96,39 +96,35 @@ const MAppCard = ({ app }) => {
 
 				<div className={classes.info}>
 					<h5 className={classes.subtitle}>Информация о приложении</h5>
-					<div className='d-flex justify-content-between'>
-						<div className={classes.col1}>
-							<div className={classes.point}>
+					<div>
+						<div className='row'>
+							<div className='col'>
 								<div className={classes.label}>Версия</div>
 								<div className={classes.value}>{app?.lastUpdate?.version || '-'}</div>
 							</div>
-
-							{!!app?.min_android && (
-								<div className={classes.point}>
-									<div className={classes.label}>Требование Android</div>
-									<div className={classes.value}>Android {app.min_android || '-'} и выше</div>
-								</div>
-							)}
-							{!!app?.min_ios && (
-								<div className={classes.point}>
-									<div className={classes.label}>Требование IOS</div>
-									<div className={classes.value}>IOS {app.min_ios || '-'} и выше</div>
-								</div>
-							)}
-						</div>
-
-						<div className={`ms-4 ${classes.col2}`}>
-							<div className={classes.point}>
+							<div className='col'>
 								<div className={classes.label}>Последнее обновление</div>
 								<div className={classes.value}>{app?.lastUpdate?.date ? DateFormatter(app.lastUpdate.date) : '-'}</div>
 							</div>
+						</div>
 
-							<div className={classes.point}>
+						<div className='row'>
+							<div className='col'>
+								<div className={classes.label}>Требование Android</div>
+								<div className={classes.value}>{!!app?.min_android ? `Android ${app.min_android} и выше` : '-'}</div>
+							</div>
+							<div className='col'>
 								<div className={classes.label}>Выпущено</div>
 								<div className={classes.value}>{app?.release?.date ? DateFormatter(app.release.date) : '-'}</div>
 							</div>
+						</div>
 
-							<div className={classes.point}>
+						<div className='row'>
+							<div className='col'>
+								<div className={classes.label}>Требование IOS</div>
+								<div className={classes.value}>{!!app?.min_ios ? `IOS ${app.min_ios} и выше` : '-'}</div>
+							</div>
+							<div className='col'>
 								<div className={classes.label}>Размер</div>
 								<div className={classes.value}>{app?.size || '-'}</div>
 							</div>
@@ -137,9 +133,9 @@ const MAppCard = ({ app }) => {
 				</div>
 			</div>
 
-			<div className={`container g-0 ${classes.services}`}>
-				<div className='row g-0'>
-					<div className={`col me-4 ${classes.reviews}`}>
+			<div className={`app-container g-0 ${classes.services}`}>
+				<div className='row'>
+					<div className={`col ${classes.reviews}`}>
 						<h4 className={classes.title}>Отзывы</h4>
 						<h6 className={classes.mark}>
 							Оценка {Array.isArray(app?.reviews) && app?.reviews?.length > 0 ? AdvMark(app.reviews) : '-'}
@@ -162,7 +158,7 @@ const MAppCard = ({ app }) => {
 							app.updates.map(update => (
 								<div className={classes.update} key={update.id}>
 									<Update update={update} />
-									{app.release?.id !== update.id && <div className={`${classes.divider} w-100`}></div>}
+									{app.release?.id !== update.id && <div className={`w-100 ${classes.divider}`}></div>}
 								</div>
 							))
 						) : (
