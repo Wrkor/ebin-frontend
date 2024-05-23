@@ -25,8 +25,8 @@ export const globalConstants = {
 		pushChecked: '/api/push',
 	},
 	//api: 'https://localhost:7252',
-	api: 'http://localhost:8000',
-	//api: 'http://77.222.60.86:8000',
+	//api: 'http://localhost:8000',
+	api: 'http://77.222.60.86:8000',
 	localStorage: {
 		theme: {
 			key: 'Theme',
