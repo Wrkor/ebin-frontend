@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AxiosDelete, AxiosFormPost, AxiosFormPut, AxiosGet } from '../API/'
 import globalConstants from '../config/globalConstants'
-import { reviews } from '../data/app.data'
 import { GetFormData, NormalizeDateSort, NormalizeSelect, NormalizeStringToArrayImgs } from '../utils'
 
 export const postUpdateCreate = createAsyncThunk('app/postUpdateCreate', async (data, { rejectWithValue }) => {
@@ -54,9 +53,6 @@ export const postAppDelete = createAsyncThunk('app/postAppDelete', async (appId,
 
 export const getApp = createAsyncThunk('app/getApp', async ({ id }, { rejectWithValue }) => {
 	const response = await AxiosGet(`${globalConstants.endPoints.app}/${id}`)
-
-	//TODO
-	if (response.status === 200) response.data.object.reviews = reviews
 
 	return response.status === 200
 		? response.data

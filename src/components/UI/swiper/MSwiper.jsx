@@ -14,7 +14,7 @@ const MSwiper = forwardRef(({ className, images, ...props }, ref) => {
 			navigation
 			ref={ref}
 			modules={[Navigation]}
-			className={`${classes.swiper} ${className ?? ''}`}
+			className={`${classes.swiper} ${images.length < 5 ? 'swiper-low-slides' : ''} ${className ?? ''}`}
 		>
 			{images.map((image, index) => (
 				<SwiperSlide className={classes.swiperSlide} key={index}>

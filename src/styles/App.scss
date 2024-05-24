@@ -138,6 +138,10 @@ div.react-select {
 	}
 }
 
+.swiper-low-slides .swiper-wrapper {
+	justify-content: center;
+}
+
 nav:has(div.nav.nav-tabs) {
 	width: fit-content;
 }
