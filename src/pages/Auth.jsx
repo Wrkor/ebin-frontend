@@ -63,7 +63,7 @@ const Auth = () => {
 						{...register('code')}
 						error={!!errors?.code}
 						message={errors?.code?.message}
-						className={`${isWindowPhone ? 'ui-size-xs' : 'ui-size-m'}`}
+						className={`${isWindowPhone ? 'ui-size-s' : 'ui-size-m'}`}
 						placeholder='Код'
 					/>
 					<MButton name='Далее' onClick={onClickPostLogin} className='ui-size-m' />
@@ -76,10 +76,10 @@ const Auth = () => {
 						error={!!errors?.phone}
 						message={errors?.phone?.message}
 						onChange={e => (e.target.value = normalizePhoneNumber(e.target.value))}
-						className={`${isWindowPhone ? 'ui-size-xs' : 'ui-size-m'}`}
+						className={`${isWindowPhone ? 'ui-size-s' : 'ui-size-m'}`}
 						placeholder='+7(___)-___-____'
 					/>
-					<MButton name='Далее' onClick={onClickPostPhone} className='ui-size-m' />
+					<MButton name='Далее' onClick={onClickPostPhone} lassName={`${isWindowPhone ? 'ui-size-s' : 'ui-size-m'}`} />
 				</>
 			)}
 		</div>
