@@ -79,7 +79,7 @@ const Auth = () => {
 						className={`${isWindowPhone ? 'ui-size-s' : 'ui-size-m'}`}
 						placeholder='+7(___)-___-____'
 					/>
-					<MButton name='Далее' onClick={onClickPostPhone} lassName={`${isWindowPhone ? 'ui-size-s' : 'ui-size-m'}`} />
+					<MButton name='Далее' onClick={onClickPostPhone} className={`${isWindowPhone ? 'ui-size-s' : 'ui-size-m'}`} />
 				</>
 			)}
 		</div>
