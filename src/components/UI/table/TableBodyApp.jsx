@@ -42,7 +42,7 @@ const TableBodyApp = ({ app }) => {
 					{!isWindowTablet && (
 						<th onClick={onClickAppCardBtn}>
 							<div className='d-flex justify-content-center'>
-								<h6>{app.downloads ? app.downloads : '-'}</h6>
+								<h6>{app.downloads ? app.downloads : '0'}</h6>
 							</div>
 						</th>
 					)}
