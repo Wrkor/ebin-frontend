@@ -5,11 +5,13 @@ import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { MButton, MInput } from '../components/UI'
 import { authSchema } from '../config/validationSchema'
+import { usePlatforms } from '../hooks'
 import useActions from '../hooks/useActions'
 import '../styles/Auth.scss'
 
 const Auth = () => {
 	const isEnterPhone = useSelector(state => state.user.isEnterPhone)
+	const { isWindowPhone } = usePlatforms()
 	const { postLogin, postPhone, postAuth } = useActions()
 
 	const {
@@ -61,7 +63,7 @@ const Auth = () => {
 						{...register('code')}
 						error={!!errors?.code}
 						message={errors?.code?.message}
-						className='ui-size-m'
+						className={`${isWindowPhone ? 'ui-size-xs' : 'ui-size-m'}`}
 						placeholder='Код'
 					/>
 					<MButton name='Далее' onClick={onClickPostLogin} className='ui-size-m' />
@@ -74,7 +76,7 @@ const Auth = () => {
 						error={!!errors?.phone}
 						message={errors?.phone?.message}
 						onChange={e => (e.target.value = normalizePhoneNumber(e.target.value))}
-						className='ui-size-m'
+						className={`${isWindowPhone ? 'ui-size-xs' : 'ui-size-m'}`}
 						placeholder='+7(___)-___-____'
 					/>
 					<MButton name='Далее' onClick={onClickPostPhone} className='ui-size-m' />
