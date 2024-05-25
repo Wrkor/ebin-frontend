@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.81229faf.css",
+    "main.css": "/static/css/main.57962b8d.css",
     "main.js": "/static/js/main.901a9739.js",
     "index.html": "/index.html",
     "static/media/CheckboxTrue.svg": "/static/media/CheckboxTrue.e2c85f28393e87b0cae3.svg",
     "static/media/CheckboxBlackTrue.svg": "/static/media/CheckboxBlackTrue.dfc6307deae87dd2f834.svg",
     "static/media/Checkbox.svg": "/static/media/Checkbox.f73168d43e096acb6c80.svg",
     "static/media/CheckboxBlack.svg": "/static/media/CheckboxBlack.276981e3ae345250b2b5.svg",
-    "main.81229faf.css.map": "/static/css/main.81229faf.css.map",
+    "main.57962b8d.css.map": "/static/css/main.57962b8d.css.map",
     "main.901a9739.js.map": "/static/js/main.901a9739.js.map"
   },
   "entrypoints": [
-    "static/css/main.81229faf.css",
+    "static/css/main.57962b8d.css",
     "static/js/main.901a9739.js"
   ]
 }
