@@ -51,7 +51,7 @@ const TableBodyAppDelete = ({ app }) => {
 					{!isWindowTablet && (
 						<th>
 							<div className='d-flex justify-content-center'>
-								<h6>{!!app.downloads ? app.downloads : '0'}</h6>
+								<h6>{app.downloads ? app.downloads : '-'}</h6>
 							</div>
 						</th>
 					)}
@@ -70,7 +70,7 @@ const TableBodyAppDelete = ({ app }) => {
 
 							<th>
 								<div className='d-flex justify-content-center'>
-									<h6>{!!app.rating ? app.rating : '0'}</h6>
+									<h6>{app.rating ? app.rating : '-'}</h6>
 								</div>
 							</th>
 						</>
