@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import globalConstants from '../../../config/globalConstants'
 import { useActions } from '../../../hooks'
 import { usePlatforms } from '../../../hooks/usePlatforms'
-import { AdvMark, DateFormatter } from '../../../utils'
+import { DateFormatter } from '../../../utils'
 import { TrashSVG } from '../../SVG'
 import classes from './TableBodyAppDelete.module.scss'
 
@@ -51,7 +51,7 @@ const TableBodyAppDelete = ({ app }) => {
 					{!isWindowTablet && (
 						<th>
 							<div className='d-flex justify-content-center'>
-								<h6>{!!app.downloads ? app.downloads : '-'}</h6>
+								<h6>{!!app.downloads ? app.downloads : '0'}</h6>
 							</div>
 						</th>
 					)}
@@ -70,7 +70,7 @@ const TableBodyAppDelete = ({ app }) => {
 
 							<th>
 								<div className='d-flex justify-content-center'>
-									<h6>{app?.reviews?.length > 0 ? AdvMark(app.reviews) : '-'}</h6>
+									<h6>{!!app.rating ? app.rating : '0'}</h6>
 								</div>
 							</th>
 						</>
