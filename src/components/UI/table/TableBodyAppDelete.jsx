@@ -22,7 +22,7 @@ const TableBodyAppDelete = ({ app }) => {
 		}
 	}
 
-	return app?.id ? (
+	return !!app?.id ? (
 		<tr className={classes.app}>
 			<th scope='row'>
 				<div className='d-flex align-items-center'>
@@ -45,13 +45,13 @@ const TableBodyAppDelete = ({ app }) => {
 
 					<th>
 						<div className='d-flex justify-content-center'>
-							<h6>{app?.status?.value || '-'}</h6>
+							<h6>{!!app?.status?.value ? app?.status?.value : '-'}</h6>
 						</div>
 					</th>
 					{!isWindowTablet && (
 						<th>
 							<div className='d-flex justify-content-center'>
-								<h6>{app.downloads || '-'}</h6>
+								<h6>{!!app.downloads ? app.downloads : '-'}</h6>
 							</div>
 						</th>
 					)}
