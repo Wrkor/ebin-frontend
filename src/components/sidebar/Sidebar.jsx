@@ -44,7 +44,9 @@ const Sidebar = ({ children }) => {
 					</Link>
 				</div>
 			)}
-			<div className={`d-flex align-items-center w-100 ${!isWindowPhone ? 'ms-5' : 'mx-auto'}`}>{children}</div>
+			<div className={`d-flex align-items-center w-100 ${!isWindowPhone ? 'ms-5  ' : 'justify-content-center'}`}>
+				{children}
+			</div>
 		</div>
 	)
 }

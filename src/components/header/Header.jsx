@@ -28,7 +28,7 @@ const Header = () => {
 							/>
 						) : (
 							<Link to={globalConstants.routes.main}>
-								<h5 className={classes.logo}>EBin Store</h5>
+								<h5 className={classes.logo}>Эн+ Маркет</h5>
 							</Link>
 						)}
 					</Navbar.Brand>

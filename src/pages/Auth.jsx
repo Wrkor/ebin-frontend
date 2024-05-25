@@ -53,7 +53,7 @@ const Auth = () => {
 
 	return (
 		<div className='form-auth d-flex flex-column align-items-center w-100'>
-			<h1>EBin Store</h1>
+			<h1>Эн+ Маркет</h1>
 			{isEnterPhone ? (
 				<>
 					<h6>Введите код отправленный на телефон</h6>
